@@ -9,7 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-## Importing data in 
+## Importing data in and adding header for for_hire_vehicle
 
 ```{r}
 green_taxi_full_data <- read_csv("./data/green_tripdata_2019-02.csv") %>% 
@@ -19,13 +19,7 @@ yellow_taxi_full_data <- read_csv("./data/yellow_tripdata_2019-02.csv") %>%
   janitor::clean_names()
 
 for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv", col_names = FALSE) %>% 
-  janitor::clean_names()
-```
-
-## Adding header for for_hire_vehicle
-
-```{r}
-for_hire_vehicle_data %>% 
+  janitor::clean_names() %>% 
   rename(
     hvfhs_license_num = x1,
     dispatching_base_num = x2,
@@ -35,5 +29,11 @@ for_hire_vehicle_data %>%
     dropoff_location_id = x6,
     sr_flag = x7
   )
+```
+
+
+
+```{r}
+
 ```
 
