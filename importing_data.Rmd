@@ -9,14 +9,26 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
-## Importing data in and adding header for for_hire_vehicle
+## Importing data in and initial tidying data 
 
 ```{r}
 green_taxi_full_data <- read_csv("./data/green_tripdata_2019-02.csv") %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  rename(
+    pickup_datetime = lpep_pickup_datetime,
+    dropoff_datetime = lpep_dropoff_datetime
+  ) %>% 
+  separate(pickup_datetime, into = c("pickup_date", "pickup_time"), sep = " ") %>% 
+  separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ")
 
 yellow_taxi_full_data <- read_csv("./data/yellow_tripdata_2019-02.csv") %>% 
-  janitor::clean_names()
+  janitor::clean_names() %>% 
+  rename(
+   pickup_datetime = tpep_pickup_datetime,
+   dropoff_datetime = tpep_dropoff_datetime
+  ) %>% 
+  separate(pickup_datetime, into = c("pickup_date", "pickup_time"), sep = " ") %>% 
+  separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ")  
 
 for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv", col_names = FALSE) %>% 
   janitor::clean_names() %>% 
@@ -24,16 +36,14 @@ for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv", col_names
     hvfhs_license_num = x1,
     dispatching_base_num = x2,
     pickup_datetime = x3,
-    dropOff_datetime = x4,
+    dropoff_datetime = x4,
     pickup_location_id = x5,
     dropoff_location_id = x6,
     sr_flag = x7
-  )
+  ) %>% 
+  separate(pickup_datetime, into = c("pickup_date", "pickup_time"), sep = " ") %>% 
+  separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ")
 ```
 
 
-
-```{r}
-
-```
 
