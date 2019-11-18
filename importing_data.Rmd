@@ -20,7 +20,9 @@ green_taxi_full_data <- read_csv("./data/green_tripdata_2019-02.csv") %>%
   ) %>% 
   separate(pickup_datetime, into = c("pickup_date", "pickup_time"), sep = " ") %>% 
   separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ")
+```
 
+```{r}
 yellow_taxi_full_data <- read_csv("./data/yellow_tripdata_2019-02.csv") %>% 
   janitor::clean_names() %>% 
   rename(
@@ -28,22 +30,62 @@ yellow_taxi_full_data <- read_csv("./data/yellow_tripdata_2019-02.csv") %>%
    dropoff_datetime = tpep_dropoff_datetime
   ) %>% 
   separate(pickup_datetime, into = c("pickup_date", "pickup_time"), sep = " ") %>% 
-  separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ")  
+  separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ") 
+```
 
-for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv", col_names = FALSE) %>% 
+```{r}
+for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv") %>% 
   janitor::clean_names() %>% 
-  rename(
-    hvfhs_license_num = x1,
-    dispatching_base_num = x2,
-    pickup_datetime = x3,
-    dropoff_datetime = x4,
-    pickup_location_id = x5,
-    dropoff_location_id = x6,
-    sr_flag = x7
-  ) %>% 
   separate(pickup_datetime, into = c("pickup_date", "pickup_time"), sep = " ") %>% 
   separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ")
 ```
 
+## Filtering for Valentine's Day 
 
+```{r}
+val_day_green <- green_taxi_full_data %>% 
+  filter(pickup_date %in% "2019-02-15")
+
+val_night_green = green_taxi_full_data %>% 
+ filter(pickup_date == "2019-02-15") %>% 
+ filter(stringr::str_detect(pickup_time, '^00|^01'))
+
+vday_green_taxi <- rbind(val_day_green, val_night_green)
+```
+
+```{r}
+val_day_yellow <- yellow_taxi_full_data %>%
+  filter(pickup_date %in% "2019-02-14")
+
+val_night_yellow = yellow_taxi_full_data %>% 
+ filter(pickup_date == "2019-02-15") %>% 
+ filter(stringr::str_detect(pickup_time, '^00|^01'))
+
+vday_yellow_taxi <- rbind(val_day_yellow, val_night_yellow)
+```
+
+```{r}
+val_day_for_hire <- for_hire_vehicle_data %>% 
+  filter(pickup_date %in% "2019-02-14")
+
+val_night_for_hire = for_hire_vehicle_data %>% 
+ filter(pickup_date == "2019-02-15") %>% 
+ filter(stringr::str_detect(pickup_time, '^00|^01'))
+
+vday_for_hire_vehicle <- rbind(val_day_for_hire, val_night_for_hire)
+```
+
+# Export datasets 
+
+```{r}
+write_csv(vday_green_taxi, "vday_green_taxi.csv")
+```
+
+```{r}
+write_csv(vday_yellow_taxi, "vday_yellow_taxi.csv")
+```
+
+```{r}
+write_csv(vday_for_hire_vehicle, "vday_for_hire_vehicle.csv")
+```
 
