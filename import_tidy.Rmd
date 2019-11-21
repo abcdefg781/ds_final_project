@@ -1,19 +1,18 @@
 ---
-title: "importing_data"
-output: html_document
+title: "final_project"
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+library(readr)
 library(tidyverse)
-
 set.seed(1)
 ```
 
 ## Importing data in and initial tidying data 
 
-```{r}
+```{r eval = FALSE}
 green_taxi_full_data <- read_csv("./data/green_tripdata_2019-02.csv") %>% 
   janitor::clean_names() %>% 
   rename(
@@ -24,7 +23,7 @@ green_taxi_full_data <- read_csv("./data/green_tripdata_2019-02.csv") %>%
   separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ")
 ```
 
-```{r}
+```{r eval = FALSE}
 yellow_taxi_full_data <- read_csv("./data/yellow_tripdata_2019-02.csv") %>% 
   janitor::clean_names() %>% 
   rename(
@@ -35,7 +34,7 @@ yellow_taxi_full_data <- read_csv("./data/yellow_tripdata_2019-02.csv") %>%
   separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ") 
 ```
 
-```{r}
+```{r eval = FALSE}
 for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv") %>% 
   janitor::clean_names() %>% 
   separate(pickup_datetime, into = c("pickup_date", "pickup_time"), sep = " ") %>% 
@@ -44,7 +43,7 @@ for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv") %>%
 
 ## Filtering for Valentine's Day 
 
-```{r}
+```{r eval = FALSE}
 val_day_green <- green_taxi_full_data %>% 
   filter(pickup_date %in% "2019-02-15")
 
@@ -55,7 +54,7 @@ val_night_green = green_taxi_full_data %>%
 vday_green_taxi <- rbind(val_day_green, val_night_green)
 ```
 
-```{r}
+```{r eval = FALSE}
 val_day_yellow <- yellow_taxi_full_data %>%
   filter(pickup_date %in% "2019-02-14")
 
@@ -66,7 +65,7 @@ val_night_yellow = yellow_taxi_full_data %>%
 vday_yellow_taxi <- rbind(val_day_yellow, val_night_yellow)
 ```
 
-```{r}
+```{r eval = FALSE}
 val_day_for_hire <- for_hire_vehicle_data %>% 
   filter(pickup_date %in% "2019-02-14")
 
@@ -79,15 +78,15 @@ vday_for_hire_vehicle <- rbind(val_day_for_hire, val_night_for_hire)
 
 # Export datasets 
 
-```{r}
+```{r eval = FALSE}
 write_csv(vday_green_taxi, "vday_green_taxi.csv")
 ```
 
-```{r}
+```{r eval = FALSE}
 write_csv(vday_yellow_taxi, "vday_yellow_taxi.csv")
 ```
 
-```{r}
+```{r eval = FALSE}
 write_csv(vday_for_hire_vehicle, "vday_for_hire_vehicle.csv")
 ```
 
