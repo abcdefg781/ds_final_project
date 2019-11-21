@@ -1,0 +1,32 @@
+---
+title: "clean_analysis"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+
+set.seed(1)
+```
+
+# Importing data
+
+```{r}
+vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
+
+vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
+
+vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv")
+```
+
+# Sampling datasets 
+
+```{r}
+yellow_taxi_vday_samp <- sample_frac(vday_yellow_taxi, size = 0.1)
+
+green_taxi_vday_samp <- sample_frac(vday_green_taxi, size = 0.2)
+
+for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1)
+```
