@@ -1,18 +1,9 @@
----
-title: "final_project"
-output: github_document
----
+final\_project
+================
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(readr)
-library(tidyverse)
-set.seed(1)
-```
+## Importing data in and initial tidying data
 
-## Importing data in and initial tidying data 
-
-```{r eval = FALSE}
+``` r
 green_taxi_full_data <- read_csv("./data/green_tripdata_2019-02.csv") %>% 
   janitor::clean_names() %>% 
   rename(
@@ -23,7 +14,7 @@ green_taxi_full_data <- read_csv("./data/green_tripdata_2019-02.csv") %>%
   separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ")
 ```
 
-```{r eval = FALSE}
+``` r
 yellow_taxi_full_data <- read_csv("./data/yellow_tripdata_2019-02.csv") %>% 
   janitor::clean_names() %>% 
   rename(
@@ -34,16 +25,16 @@ yellow_taxi_full_data <- read_csv("./data/yellow_tripdata_2019-02.csv") %>%
   separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ") 
 ```
 
-```{r eval = FALSE}
+``` r
 for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv") %>% 
   janitor::clean_names() %>% 
   separate(pickup_datetime, into = c("pickup_date", "pickup_time"), sep = " ") %>% 
   separate(dropoff_datetime, into = c("dropoff_date", "dropoff_time"), sep = " ")
 ```
 
-## Filtering for Valentine's Day 
+## Filtering for Valentine’s Day
 
-```{r eval = FALSE}
+``` r
 val_day_green <- green_taxi_full_data %>% 
   filter(pickup_date %in% "2019-02-15")
 
@@ -54,7 +45,7 @@ val_night_green = green_taxi_full_data %>%
 vday_green_taxi <- rbind(val_day_green, val_night_green)
 ```
 
-```{r eval = FALSE}
+``` r
 val_day_yellow <- yellow_taxi_full_data %>%
   filter(pickup_date %in% "2019-02-14")
 
@@ -65,7 +56,7 @@ val_night_yellow = yellow_taxi_full_data %>%
 vday_yellow_taxi <- rbind(val_day_yellow, val_night_yellow)
 ```
 
-```{r eval = FALSE}
+``` r
 val_day_for_hire <- for_hire_vehicle_data %>% 
   filter(pickup_date %in% "2019-02-14")
 
@@ -76,45 +67,82 @@ val_night_for_hire = for_hire_vehicle_data %>%
 vday_for_hire_vehicle <- rbind(val_day_for_hire, val_night_for_hire)
 ```
 
-# Export datasets 
+# Export datasets
 
-```{r eval = FALSE}
+``` r
 write_csv(vday_green_taxi, "vday_green_taxi.csv")
 ```
 
-```{r eval = FALSE}
+``` r
 write_csv(vday_yellow_taxi, "vday_yellow_taxi.csv")
 ```
 
-```{r eval = FALSE}
+``` r
 write_csv(vday_for_hire_vehicle, "vday_for_hire_vehicle.csv")
 ```
 
 # Reimporting data from csv (trying to make sure that it works)
 
-```{r}
+``` r
 vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
 ```
 
-```{r}
+    ## Parsed with column specification:
+    ## cols(
+    ##   .default = col_double(),
+    ##   pickup_date = col_date(format = ""),
+    ##   pickup_time = col_time(format = ""),
+    ##   dropoff_date = col_date(format = ""),
+    ##   dropoff_time = col_time(format = ""),
+    ##   store_and_fwd_flag = col_character(),
+    ##   ehail_fee = col_logical()
+    ## )
+
+    ## See spec(...) for full column specifications.
+
+``` r
 vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
 ```
 
-```{r}
+    ## Parsed with column specification:
+    ## cols(
+    ##   .default = col_double(),
+    ##   pickup_date = col_date(format = ""),
+    ##   pickup_time = col_time(format = ""),
+    ##   dropoff_date = col_date(format = ""),
+    ##   dropoff_time = col_time(format = ""),
+    ##   store_and_fwd_flag = col_character()
+    ## )
+
+    ## See spec(...) for full column specifications.
+
+``` r
 vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv")
 ```
 
+    ## Parsed with column specification:
+    ## cols(
+    ##   hvfhs_license_num = col_character(),
+    ##   dispatching_base_num = col_character(),
+    ##   pickup_date = col_date(format = ""),
+    ##   pickup_time = col_time(format = ""),
+    ##   dropoff_date = col_date(format = ""),
+    ##   dropoff_time = col_time(format = ""),
+    ##   pu_location_id = col_double(),
+    ##   do_location_id = col_double(),
+    ##   sr_flag = col_double()
+    ## )
+
 # Sampling datasets
 
-```{r}
+``` r
 yellow_taxi_vday_samp <- sample_frac(vday_yellow_taxi, size = 0.1)
 ```
 
-```{r}
+``` r
 green_taxi_vday_samp <- sample_frac(vday_green_taxi, size = 0.2)
 ```
 
-```{r}
+``` r
 for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1)
 ```
-
