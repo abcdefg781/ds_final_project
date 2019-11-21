@@ -1,6 +1,8 @@
 ---
 title: "final_project"
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -45,7 +47,7 @@ for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv") %>%
 
 ```{r eval = FALSE}
 val_day_green <- green_taxi_full_data %>% 
-  filter(pickup_date %in% "2019-02-15")
+  filter(pickup_date %in% "2019-02-14")
 
 val_night_green = green_taxi_full_data %>% 
  filter(pickup_date == "2019-02-15") %>% 
@@ -117,4 +119,5 @@ green_taxi_vday_samp <- sample_frac(vday_green_taxi, size = 0.2)
 ```{r}
 for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1)
 ```
+
 

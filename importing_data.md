@@ -36,7 +36,7 @@ for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv") %>%
 
 ``` r
 val_day_green <- green_taxi_full_data %>% 
-  filter(pickup_date %in% "2019-02-15")
+  filter(pickup_date %in% "2019-02-14")
 
 val_night_green = green_taxi_full_data %>% 
  filter(pickup_date == "2019-02-15") %>% 
