@@ -1,0 +1,15 @@
+---
+title: "Final Project Website - Exploring the Taxi habits of NY on Valentines day"
+author: "Data Science Group 31 - Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin"
+date: "11/21/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## History
+<p> The New York City <b>Taxi and Limousine Commission (NYC TLC)</b> is an agency of the New York City government that licenses and regulates the medallion taxis and for-hire vehicle industries, including app-based companies.[1][2] The TLC's regulatory landscape includes medallion (yellow) taxicabs, green or Boro taxicabs, black cars (including both traditional and app-based services), community-based livery cars, commuter vans, paratransit vehicles (ambulettes), and some luxury limousines.[3]
+
+</p>
