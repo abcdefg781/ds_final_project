@@ -1,0 +1,18 @@
+name: "P8105 Final Project yml"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "History"
+      href: about.html
+    - text: "Graphs and Charts"
+      menu:
+      - text: "Plotly"
+        href: plotly.html
+      - text: "Dashboard"
+        href: dashboard.html
+    - icon: fa-github fa-lg
+      href: http://github.com/jamespng3/
+output:
+  html_document:
+    theme: cerulean
