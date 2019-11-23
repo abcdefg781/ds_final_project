@@ -7,38 +7,57 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-
+library(readr)
+library(readxl)
 library(tidyverse)
-
 set.seed(1)
 ```
 
-# Importing data
+Importing data
+
+Reimporting data from csv (trying to make sure that it works)
 
 ```{r}
 vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
-
 vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
-
 vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv")
 ```
 
-# Sampling datasets 
+# Sampling datasets
 
 ```{r}
 yellow_taxi_vday_samp <- sample_frac(vday_yellow_taxi, size = 0.1) %>% 
   mutate(type = "yellow")
-
 green_taxi_vday_samp <- sample_frac(vday_green_taxi, size = 0.2) %>% 
   mutate(type = "green")
-  
 for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1) %>% 
   mutate(type = "for hire")
-
-test1 = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp)
 ```
 
+Merge datasets
 ```{r}
-green_apr$mins <- as.numeric(difftime(green_apr$lpep_dropoff_datetime, green_apr$ lpep_pickup_datetime), units = "mins")
+zone = read_xlsx("./data/taxi_zones_to_neighborhood.xlsx")
 
+transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
+
+transport_final = left_join(transport, zone, by = c("pu_location_id" = "taxi_zone")) %>% 
+  rename(pu_neiborhood = neighborhood,
+         pu_boro = borough) %>% 
+  left_join(., zone, 
+            by = c("do_location_id" = "taxi_zone")) %>%
+  rename(do_neiborhood = neighborhood,
+         do_boro = borough) %>% 
+  select(-ends_with("location_id")) %>% 
+  filter(do_boro == "Manhattan") 
+```
+
+Add duration variable
+```{r}
+transport_final = transport_final %>% 
+  mutate(
+  pu_time = paste(pickup_date, pickup_time, sep = " "),
+  do_time = paste(dropoff_date, dropoff_time, sep = " "),
+  duration = as.numeric(difftime(do_time, pu_time, units = "mins"))
+) %>% 
+  select(-do_time, -pu_time, -do_boro)
 ```
