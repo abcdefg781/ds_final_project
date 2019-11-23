@@ -366,11 +366,11 @@ for_hire_vday_samp &lt;- sample_frac(vday_for_hire_vehicle, size = 0.1) %&gt;%
 transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
 
 transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; = &quot;taxi_zone&quot;)) %&gt;% 
-  rename(pu_neiborhood = neighborhood,
+  rename(pu_neighborhood = neighborhood,
          pu_boro = borough) %&gt;% 
   left_join(., zone, 
             by = c(&quot;do_location_id&quot; = &quot;taxi_zone&quot;)) %&gt;%
-  rename(do_neiborhood = neighborhood,
+  rename(do_neighborhood = neighborhood,
          do_boro = borough) %&gt;% 
   select(-ends_with(&quot;location_id&quot;)) %&gt;% 
   filter(do_boro == &quot;Manhattan&quot;) </code></pre>
@@ -382,6 +382,14 @@ transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; =
   duration = as.numeric(difftime(do_time, pu_time, units = &quot;mins&quot;))
 ) %&gt;% 
   select(-do_time, -pu_time, -do_boro)</code></pre>
+<p>Probing for outliers (potentially false data records)</p>
+<pre class="r"><code>test = transport_final %&gt;% 
+  filter(duration &gt; 100 &amp; duration == 0) </code></pre>
+<p>Eyeballing (outlier) test dataset, we decided to get rid of duration = 0 and duration &gt; 150</p>
+<p>Probing into how many NA’s are there (Bronx and Staten Island pick-up locations)</p>
+<pre class="r"><code>length(transport_final$pu_neighborhood[is.na(transport_final$pu_neighborhood)])
+
+# There are 1613 pickups happening in the Bronx and Staten Island</code></pre>
 </div>
 
 
