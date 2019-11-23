@@ -135,3 +135,8 @@ transport_final = transport_final %>%
 
 ```
 
+# Export Final Transport Data into CSV
+```{r eval = FALSE}
+write_csv(transport_final, "./data/transport_final.csv")
+```
+
