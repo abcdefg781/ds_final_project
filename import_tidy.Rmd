@@ -1,11 +1,14 @@
 ---
 title: "final_project"
 output: github_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
+library(readxl)
 library(tidyverse)
 set.seed(1)
 ```
@@ -45,7 +48,7 @@ for_hire_vehicle_data <- read_csv("./data/fhvhv_tripdata_2019-02.csv") %>%
 
 ```{r eval = FALSE}
 val_day_green <- green_taxi_full_data %>% 
-  filter(pickup_date %in% "2019-02-15")
+  filter(pickup_date %in% "2019-02-14")
 
 val_night_green = green_taxi_full_data %>% 
  filter(pickup_date == "2019-02-15") %>% 
@@ -80,13 +83,7 @@ vday_for_hire_vehicle <- rbind(val_day_for_hire, val_night_for_hire)
 
 ```{r eval = FALSE}
 write_csv(vday_green_taxi, "vday_green_taxi.csv")
-```
-
-```{r eval = FALSE}
 write_csv(vday_yellow_taxi, "vday_yellow_taxi.csv")
-```
-
-```{r eval = FALSE}
 write_csv(vday_for_hire_vehicle, "vday_for_hire_vehicle.csv")
 ```
 
@@ -94,27 +91,47 @@ write_csv(vday_for_hire_vehicle, "vday_for_hire_vehicle.csv")
 
 ```{r}
 vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
-```
-
-```{r}
 vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
-```
-
-```{r}
 vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv")
 ```
 
 # Sampling datasets
 
 ```{r}
-yellow_taxi_vday_samp <- sample_frac(vday_yellow_taxi, size = 0.1)
+yellow_taxi_vday_samp <- sample_frac(vday_yellow_taxi, size = 0.1) %>% 
+  mutate(type = "yellow")
+green_taxi_vday_samp <- sample_frac(vday_green_taxi, size = 0.2) %>% 
+  mutate(type = "green")
+for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1) %>% 
+  mutate(type = "for hire")
 ```
 
+Merge datasets
 ```{r}
-green_taxi_vday_samp <- sample_frac(vday_green_taxi, size = 0.2)
+zone = read_xlsx("./data/taxi_zones_to_neighborhood.xlsx")
+
+transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
+
+transport_final = left_join(transport, zone, by = c("pu_location_id" = "taxi_zone")) %>% 
+  rename(pu_neiborhood = neighborhood,
+         pu_boro = borough) %>% 
+  left_join(., zone, 
+            by = c("do_location_id" = "taxi_zone")) %>%
+  rename(do_neiborhood = neighborhood,
+         do_boro = borough) %>% 
+  select(-ends_with("location_id")) %>% 
+  filter(do_boro == "Manhattan") 
 ```
 
+Add duration variable
 ```{r}
-for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1)
+transport_final = transport_final %>% 
+  mutate(
+  pu_time = paste(pickup_date, pickup_time, sep = " "),
+  do_time = paste(dropoff_date, dropoff_time, sep = " "),
+  duration = as.numeric(difftime(do_time, pu_time, units = "mins"))
+) %>% 
+  select(-do_time, -pu_time, -do_boro)
+
 ```
 
