@@ -132,7 +132,6 @@ transport_final = transport_final %>%
   duration = as.numeric(difftime(do_time, pu_time, units = "mins"))
 ) %>% 
   select(-do_time, -pu_time, -do_boro)
-
 ```
 
 # Export Final Transport Data into CSV
