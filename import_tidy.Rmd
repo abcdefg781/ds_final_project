@@ -70,7 +70,7 @@ vday_yellow_taxi <- rbind(val_day_yellow, val_night_yellow)
 
 ```{r eval = FALSE}
 val_day_for_hire <- for_hire_vehicle_data %>% 
-  filter(pickup_date %in% "2019-02-14")
+  filter(pickup_date %in% "2019-02-14") 
 
 val_night_for_hire = for_hire_vehicle_data %>% 
  filter(pickup_date == "2019-02-15") %>% 
@@ -87,13 +87,24 @@ write_csv(vday_yellow_taxi, "vday_yellow_taxi.csv")
 write_csv(vday_for_hire_vehicle, "vday_for_hire_vehicle.csv")
 ```
 
+# Filtering for Uber and Lyft Post Cleaned Data 
+
+```{r}
+vday_for_hire_vehicle <- vday_for_hire_vehicle %>% 
+  filter(hvfhs_license_num %in% c("HV0003", "HV0005"))
+
+write_csv(vday_for_hire_vehicle, "vday_for_hire_vehicle.csv")
+```
+
+
 # Reimporting data from csv (trying to make sure that it works)
 
 ```{r}
 vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
 vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
-vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv")
+vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv") 
 ```
+
 
 # Sampling datasets
 
