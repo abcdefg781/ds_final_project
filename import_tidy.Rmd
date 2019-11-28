@@ -67,7 +67,7 @@ val_night_yellow = yellow_taxi_full_data %>%
 
 vday_yellow_taxi <- rbind(val_day_yellow, val_night_yellow)
 ```
-
+                         
 ```{r eval = FALSE}
 val_day_for_hire <- for_hire_vehicle_data %>% 
   filter(pickup_date %in% "2019-02-14")
@@ -132,5 +132,11 @@ transport_final = transport_final %>%
   duration = as.numeric(difftime(do_time, pu_time, units = "mins"))
 ) %>% 
   select(-do_time, -pu_time, -do_boro)
+```
+
+```{r}
+test = transport_final %>% 
+  filter(pickup_date == "2019-02-14" & dropoff_date == "2019-02-15") %>% 
+  filter(duration >100)
 ```
 

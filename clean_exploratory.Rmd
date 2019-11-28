@@ -82,3 +82,7 @@ length(transport_final$pu_neighborhood[is.na(transport_final$pu_neighborhood)])
 
 # There are 1613 pickups happening in the Bronx and Staten Island
 ```
+
+
+
+```
