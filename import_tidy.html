@@ -440,6 +440,10 @@ transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; =
 ) %&gt;% 
   select(-do_time, -pu_time, -do_boro)</code></pre>
 </div>
+<div id="export-final-transport-data-into-csv" class="section level1">
+<h1>Export Final Transport Data into CSV</h1>
+<pre class="r"><code>write_csv(transport_final, &quot;./data/transport_final.csv&quot;)</code></pre>
+</div>
 
 
 

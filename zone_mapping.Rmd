@@ -1,0 +1,42 @@
+---
+title: "Taxi Zones"
+author: "Adeline Shin"
+date: "11/22/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(leaflet)
+library(viridis)
+```
+
+# Loading in Taxi Zone Codes
+```{r}
+taxi_zones = read.csv("./data/taxi_zones.csv")
+
+taxi_zones %>% 
+  ggplot(aes(x = x, y = y)) +
+  geom_point()
+```
+
+# Mapping
+```{r}
+pal = colorFactor(
+  palette = magma,
+  domain = taxi_zones$borough
+)
+
+taxi_zones %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addCircleMarkers(
+    ~x, ~y,
+    color = ~pal(borough),
+    radius = 1
+  )
+```
+
