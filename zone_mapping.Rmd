@@ -43,7 +43,8 @@ taxi_zones %>%
     ~x, ~y,
     color = ~pal(borough),
     radius = 1
-  )
+  ) %>% 
+  
 ```
 
 # Mapping Zones
@@ -61,5 +62,28 @@ zone_map =
 
 zone_map + tm_basemap(server = "OpenTopoMap")
 
+```
+
+```{r}
+library(rgdal)
+zone_coords =
+  zone_map_data[[7]]
+
+coords = 
+  as.data.frame(zone_coords[[1]][[1]][[1]]) %>% 
+  select(lon = V1, lat = V2)
+
+coords = SpatialPoints (coords, proj4string = CRS ('+proj=utm +zone=18 +ellps=GRS80 +datum=NAD83 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'))
+
+coord_WGS84 <- spTransform(coords, CRS('+proj=longlat +datum=WGS84 +no_defs'))
+
+coordinates(coords) = c("lon", "lat")
+proj4string(coords) = CRS("+init=epsg:4326")
+```
+
+```{r}
+zone_map_data %>% 
+  leaflet() %>% 
+  addProviderTiles(providers$CartoDB.Positron) 
 ```
 
