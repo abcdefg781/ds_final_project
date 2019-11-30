@@ -361,16 +361,25 @@ green_taxi_vday_samp &lt;- sample_frac(vday_green_taxi, size = 0.2) %&gt;%
 for_hire_vday_samp &lt;- sample_frac(vday_for_hire_vehicle, size = 0.1) %&gt;% 
   mutate(type = &quot;for hire&quot;)</code></pre>
 <p>Merge datasets</p>
-<pre class="r"><code>zone = read_xlsx(&quot;./data/taxi_zones_to_neighborhood.xlsx&quot;)
+<pre class="r"><code>zone = read_csv(&quot;./data/taxi_zones.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   zone_id = col_double(),
+##   borough = col_character(),
+##   zone = col_character(),
+##   x = col_double(),
+##   y = col_double(),
+##   shape_length = col_double(),
+##   shape_area = col_double()
+## )</code></pre>
+<pre class="r"><code>transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
 
-transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
-
-transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; = &quot;taxi_zone&quot;)) %&gt;% 
-  rename(pu_neighborhood = neighborhood,
+transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; = &quot;zone_id&quot;)) %&gt;% 
+  rename(pu_neighborhood = zone,
          pu_boro = borough) %&gt;% 
   left_join(., zone, 
-            by = c(&quot;do_location_id&quot; = &quot;taxi_zone&quot;)) %&gt;%
-  rename(do_neighborhood = neighborhood,
+            by = c(&quot;do_location_id&quot; = &quot;zone_id&quot;)) %&gt;%
+  rename(do_neighborhood = zone,
          do_boro = borough) %&gt;% 
   select(-ends_with(&quot;location_id&quot;)) %&gt;% 
   filter(do_boro == &quot;Manhattan&quot;) </code></pre>
@@ -390,6 +399,92 @@ transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; =
 <pre class="r"><code>length(transport_final$pu_neighborhood[is.na(transport_final$pu_neighborhood)])
 
 # There are 1613 pickups happening in the Bronx and Staten Island</code></pre>
+<p>Make a heatmap for tips based on do and pu neighborhoods</p>
+<pre class="r"><code>library(&quot;gplots&quot;)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;gplots&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:stats&#39;:
+## 
+##     lowess</code></pre>
+<pre class="r"><code>#prepare data
+tp_heatmap_tip = 
+  transport_final %&gt;% 
+  filter(pu_boro == &quot;Manhattan&quot;) %&gt;% 
+  select(do_neighborhood, pu_neighborhood, tip_amount) %&gt;% 
+  group_by(do_neighborhood, pu_neighborhood) %&gt;% 
+  summarize(avg_tip = mean(tip_amount)) %&gt;% 
+  ungroup() %&gt;% 
+  distinct() %&gt;% 
+  pivot_wider(
+    names_from = pu_neighborhood,
+    values_from = avg_tip
+  ) %&gt;% 
+  mutate_if(is.numeric , replace_na, replace = 0)
+
+m_tip &lt;- as.matrix(tp_heatmap_tip[, -1])
+rownames(m_tip) &lt;- tp_heatmap_tip$do_neighborhood
+heatmap.2(m_tip, scale=&quot;none&quot;, density.info=&quot;none&quot;, trace=&quot;none&quot;,  hclustfun = hclust)</code></pre>
+<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>Make a heatmap for count of drop-offs for drop-off and pick-up locations in manhattan</p>
+<pre class="r"><code>tp_heatmap_count = 
+  transport_final %&gt;% 
+  filter(pu_boro == &quot;Manhattan&quot;) %&gt;% 
+  select(do_neighborhood, pu_neighborhood) %&gt;% 
+  group_by(do_neighborhood, pu_neighborhood) %&gt;% 
+  summarize(count = n()) %&gt;% 
+  ungroup() %&gt;% 
+  filter(count &gt; 20) %&gt;% 
+  pivot_wider(
+    names_from = pu_neighborhood,
+    values_from = count
+  ) %&gt;% 
+  mutate_if(is.numeric , replace_na, replace = 0)
+
+m &lt;- as.matrix(tp_heatmap_count[, -1])
+rownames(m) &lt;- tp_heatmap_count$do_neighborhood
+heatmap.2(m, scale=&quot;none&quot;, density.info=&quot;none&quot;, trace=&quot;none&quot;,  hclustfun = hclust)</code></pre>
+<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Load necessary packages for network building</p>
+<pre class="r"><code>library(GGally)</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
+##   method from   
+##   +.gg   ggplot2</code></pre>
+<pre><code>## 
+## Attaching package: &#39;GGally&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     nasa</code></pre>
+<pre class="r"><code>library(network)</code></pre>
+<pre><code>## network: Classes for Relational Data
+## Version 1.15 created on 2019-04-01.
+## copyright (c) 2005, Carter T. Butts, University of California-Irvine
+##                     Mark S. Handcock, University of California -- Los Angeles
+##                     David R. Hunter, Penn State University
+##                     Martina Morris, University of Washington
+##                     Skye Bender-deMoll, University of Washington
+##  For citation information, type citation(&quot;network&quot;).
+##  Type help(&quot;network-package&quot;) to get started.</code></pre>
+<pre class="r"><code>library(geomnet)</code></pre>
+<p>Try to build a network with transport data</p>
+<pre class="r"><code>transport_final_mini =
+  transport_final %&gt;% 
+  sample_frac(0.2) 
+
+tp_list = 
+  list(&quot;edges&quot; = transport_final_mini[c(&quot;do_neighborhood&quot;, &quot;pu_neighborhood&quot;)] %&gt;% drop_na(),
+       &quot;vertices&quot; = transport_final_mini[c(&quot;do_neighborhood&quot;, &quot;pu_boro&quot;)] %&gt;% drop_na()) 
+
+tp.net &lt;- network(tp_list$edges[, 1:2], directed = FALSE)
+
+# create node attribute
+tp.net %v% &quot;do_neighborhood&quot; &lt;- as.character(
+tp_list$vertices[ network.vertex.names(tp.net), &quot;do_neighborhood&quot;]
+)
+# create plot for ggnet2
+set.seed(100)
+ggnet2(tp.net, labelon = TRUE, 
+size = 1, vjust = -0.6, mode = &quot;kamadakawai&quot;, label.size = 1)</code></pre>
+<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 </div>
 
 
