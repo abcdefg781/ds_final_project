@@ -7,6 +7,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
 library(tidyverse)
+install.packages("d3heatmap")
+library(d3heatmap)
 ```
 
 # Manhattan to Manhattan matrix

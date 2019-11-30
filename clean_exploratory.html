@@ -314,8 +314,8 @@ $(document).ready(function () {
 </div>
 
 
-<p>Importing data</p>
-<p>Reimporting data from csv (trying to make sure that it works)</p>
+<div id="importing-data" class="section level1">
+<h1>Importing data</h1>
 <pre class="r"><code>vday_green_taxi &lt;- read_csv(&quot;./data/vday_green_taxi.csv&quot;)</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
@@ -352,6 +352,12 @@ $(document).ready(function () {
 ##   do_location_id = col_double(),
 ##   sr_flag = col_double()
 ## )</code></pre>
+</div>
+<div id="filtering-for-uber-and-lyft-post-cleaned-data" class="section level1">
+<h1>Filtering for Uber and Lyft Post Cleaned Data</h1>
+<pre class="r"><code>vday_for_hire_vehicle &lt;- vday_for_hire_vehicle %&gt;% 
+  filter(hvfhs_license_num %in% c(&quot;HV0003&quot;, &quot;HV0005&quot;))</code></pre>
+</div>
 <div id="sampling-datasets" class="section level1">
 <h1>Sampling datasets</h1>
 <pre class="r"><code>yellow_taxi_vday_samp &lt;- sample_frac(vday_yellow_taxi, size = 0.1) %&gt;% 
@@ -360,7 +366,9 @@ green_taxi_vday_samp &lt;- sample_frac(vday_green_taxi, size = 0.2) %&gt;%
   mutate(type = &quot;green&quot;)
 for_hire_vday_samp &lt;- sample_frac(vday_for_hire_vehicle, size = 0.1) %&gt;% 
   mutate(type = &quot;for hire&quot;)</code></pre>
-<p>Merge datasets</p>
+</div>
+<div id="merge-datasets" class="section level1">
+<h1>Merge datasets</h1>
 <pre class="r"><code>zone = read_csv(&quot;./data/taxi_zones.csv&quot;)</code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
@@ -383,7 +391,9 @@ transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; =
          do_boro = borough) %&gt;% 
   select(-ends_with(&quot;location_id&quot;)) %&gt;% 
   filter(do_boro == &quot;Manhattan&quot;) </code></pre>
-<p>Add duration variable</p>
+</div>
+<div id="add-duration-variable" class="section level1">
+<h1>Add duration variable</h1>
 <pre class="r"><code>transport_final = transport_final %&gt;% 
   mutate(
   pu_time = paste(pickup_date, pickup_time, sep = &quot; &quot;),
@@ -391,15 +401,23 @@ transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; =
   duration = as.numeric(difftime(do_time, pu_time, units = &quot;mins&quot;))
 ) %&gt;% 
   select(-do_time, -pu_time, -do_boro)</code></pre>
-<p>Probing for outliers (potentially false data records)</p>
+</div>
+<div id="probing-for-outliers-potentially-false-data-records" class="section level1">
+<h1>Probing for outliers (potentially false data records)</h1>
 <pre class="r"><code>test = transport_final %&gt;% 
   filter(duration &gt; 100 &amp; duration == 0) </code></pre>
-<p>Eyeballing (outlier) test dataset, we decided to get rid of duration = 0 and duration &gt; 150</p>
-<p>Probing into how many NA’s are there (Bronx and Staten Island pick-up locations)</p>
+</div>
+<div id="eyeballing-outlier-test-dataset-we-decided-to-get-rid-of-duration-0-and-duration-150" class="section level1">
+<h1>Eyeballing (outlier) test dataset, we decided to get rid of duration = 0 and duration &gt; 150</h1>
+</div>
+<div id="probing-into-how-many-nas-are-there-bronx-and-staten-island-pick-up-locations" class="section level1">
+<h1>Probing into how many NA’s are there (Bronx and Staten Island pick-up locations)</h1>
 <pre class="r"><code>length(transport_final$pu_neighborhood[is.na(transport_final$pu_neighborhood)])
 
 # There are 1613 pickups happening in the Bronx and Staten Island</code></pre>
-<p>Make a heatmap for tips based on do and pu neighborhoods</p>
+</div>
+<div id="make-a-heatmap-for-tips-based-on-do-and-pu-neighborhoods" class="section level1">
+<h1>Make a heatmap for tips based on do and pu neighborhoods</h1>
 <pre class="r"><code>library(&quot;gplots&quot;)</code></pre>
 <pre><code>## 
 ## Attaching package: &#39;gplots&#39;</code></pre>
@@ -424,8 +442,10 @@ tp_heatmap_tip =
 m_tip &lt;- as.matrix(tp_heatmap_tip[, -1])
 rownames(m_tip) &lt;- tp_heatmap_tip$do_neighborhood
 heatmap.2(m_tip, scale=&quot;none&quot;, density.info=&quot;none&quot;, trace=&quot;none&quot;,  hclustfun = hclust)</code></pre>
-<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>Make a heatmap for count of drop-offs for drop-off and pick-up locations in manhattan</p>
+<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="make-a-heatmap-for-count-of-drop-offs-for-drop-off-and-pick-up-locations-in-manhattan" class="section level1">
+<h1>Make a heatmap for count of drop-offs for drop-off and pick-up locations in manhattan</h1>
 <pre class="r"><code>tp_heatmap_count = 
   transport_final %&gt;% 
   filter(pu_boro == &quot;Manhattan&quot;) %&gt;% 
@@ -443,8 +463,10 @@ heatmap.2(m_tip, scale=&quot;none&quot;, density.info=&quot;none&quot;, trace=&q
 m &lt;- as.matrix(tp_heatmap_count[, -1])
 rownames(m) &lt;- tp_heatmap_count$do_neighborhood
 heatmap.2(m, scale=&quot;none&quot;, density.info=&quot;none&quot;, trace=&quot;none&quot;,  hclustfun = hclust)</code></pre>
-<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
-<p>Load necessary packages for network building</p>
+<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="load-necessary-packages-for-network-building" class="section level1">
+<h1>Load necessary packages for network building</h1>
 <pre class="r"><code>library(GGally)</code></pre>
 <pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
 ##   method from   
@@ -465,7 +487,9 @@ heatmap.2(m, scale=&quot;none&quot;, density.info=&quot;none&quot;, trace=&quot;
 ##  For citation information, type citation(&quot;network&quot;).
 ##  Type help(&quot;network-package&quot;) to get started.</code></pre>
 <pre class="r"><code>library(geomnet)</code></pre>
-<p>Try to build a network with transport data</p>
+</div>
+<div id="try-to-build-a-network-with-transport-data" class="section level1">
+<h1>Try to build a network with transport data</h1>
 <pre class="r"><code>transport_final_mini =
   transport_final %&gt;% 
   sample_frac(0.2) 
@@ -484,7 +508,30 @@ tp_list$vertices[ network.vertex.names(tp.net), &quot;do_neighborhood&quot;]
 set.seed(100)
 ggnet2(tp.net, labelon = TRUE, 
 size = 1, vjust = -0.6, mode = &quot;kamadakawai&quot;, label.size = 1)</code></pre>
-<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="bar-graph-of-pickups-in-manhattan" class="section level1">
+<h1>Bar graph of pickups in Manhattan</h1>
+<pre class="r"><code>transport_final %&gt;% 
+  filter(
+    pu_boro == &quot;Manhattan&quot;
+  ) %&gt;% 
+  select(pu_neighborhood, do_neighborhood) %&gt;% 
+  group_by(pu_neighborhood, do_neighborhood) %&gt;% 
+  summarise() %&gt;% 
+  count() %&gt;% 
+  ggplot(aes(x = pu_neighborhood, y = n)) + geom_col() +
+  coord_flip()</code></pre>
+<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>#bar graph for all pick-ups and drop-offs, colored by borough</p>
+<pre class="r"><code>tp_do_col = transport_final %&gt;% 
+  filter(pu_boro!= &quot;EWR&quot;) %&gt;% 
+  select(pu_neighborhood, do_neighborhood, pu_boro) %&gt;% 
+  group_by(pu_neighborhood, do_neighborhood, pu_boro) %&gt;% 
+  drop_na() %&gt;% 
+  summarize(count = n()) %&gt;% 
+  ggplot(aes(x = do_neighborhood, y = count, fill = pu_boro)) + geom_col() +
+  coord_flip() </code></pre>
 </div>
 
 
