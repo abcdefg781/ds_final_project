@@ -87,14 +87,7 @@ write_csv(vday_yellow_taxi, "vday_yellow_taxi.csv")
 write_csv(vday_for_hire_vehicle, "vday_for_hire_vehicle.csv")
 ```
 
-# Filtering for Uber and Lyft Post Cleaned Data 
 
-```{r}
-vday_for_hire_vehicle <- vday_for_hire_vehicle %>% 
-  filter(hvfhs_license_num %in% c("HV0003", "HV0005"))
-
-write_csv(vday_for_hire_vehicle, "vday_for_hire_vehicle.csv")
-```
 
 
 # Reimporting data from csv (trying to make sure that it works)
@@ -105,6 +98,12 @@ vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
 vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv") 
 ```
 
+# Filtering for Uber and Lyft Post Cleaned Data 
+
+```{r}
+vday_for_hire_vehicle <- vday_for_hire_vehicle %>% 
+  filter(hvfhs_license_num %in% c("HV0003", "HV0005"))
+```
 
 # Sampling datasets
 
