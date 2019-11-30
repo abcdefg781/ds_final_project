@@ -118,16 +118,16 @@ for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1) %>%
 
 Merge datasets
 ```{r}
-zone = read_xlsx("./data/taxi_zones_to_neighborhood.xlsx")
+zone = read_csv("./data/taxi_zones.csv")
 
 transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
 
-transport_final = left_join(transport, zone, by = c("pu_location_id" = "taxi_zone")) %>% 
-  rename(pu_neiborhood = neighborhood,
+transport_final = left_join(transport, zone, by = c("pu_location_id" = "zone_id")) %>% 
+  rename(pu_neiborhood = zone,
          pu_boro = borough) %>% 
   left_join(., zone, 
-            by = c("do_location_id" = "taxi_zone")) %>%
-  rename(do_neiborhood = neighborhood,
+            by = c("do_location_id" = "zone_id")) %>%
+  rename(do_neiborhood = zone,
          do_boro = borough) %>% 
   select(-ends_with("location_id")) %>% 
   filter(do_boro == "Manhattan") 
@@ -149,10 +149,9 @@ transport_final = transport_final %>%
 test = transport_final %>% 
   filter(pickup_date == "2019-02-14" & dropoff_date == "2019-02-15") %>% 
   filter(duration >100)
-=======
+
 # Export Final Transport Data into CSV
-```{r eval = FALSE}
 write_csv(transport_final, "./data/transport_final.csv")
->>>>>>> 750e047c74b719ea106dedd17ea7ec6552c97f3e
+
 ```
 

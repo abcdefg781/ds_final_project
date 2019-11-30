@@ -520,11 +520,10 @@ size = 1, vjust = -0.6, mode = &quot;kamadakawai&quot;, label.size = 1)</code></
   group_by(pu_neighborhood, do_neighborhood) %&gt;% 
   summarise() %&gt;% 
   count() %&gt;% 
-  ggplot(aes(x = pu_neighborhood, y = n)) + geom_col() +
-  coord_flip()</code></pre>
+  ggplot(aes(x = pu_neighborhood, y = n)) + geom_col() </code></pre>
 <p><img src="clean_exploratory_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
 <p>#bar graph for all pick-ups and drop-offs, colored by borough</p>
-<pre class="r"><code>tp_do_col = transport_final %&gt;% 
+<pre class="r"><code>transport_final %&gt;% 
   filter(pu_boro!= &quot;EWR&quot;) %&gt;% 
   select(pu_neighborhood, do_neighborhood, pu_boro) %&gt;% 
   group_by(pu_neighborhood, do_neighborhood, pu_boro) %&gt;% 
@@ -532,6 +531,7 @@ size = 1, vjust = -0.6, mode = &quot;kamadakawai&quot;, label.size = 1)</code></
   summarize(count = n()) %&gt;% 
   ggplot(aes(x = do_neighborhood, y = count, fill = pu_boro)) + geom_col() +
   coord_flip() </code></pre>
+<p><img src="clean_exploratory_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 </div>
 
 

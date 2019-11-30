@@ -356,7 +356,7 @@ val_night_yellow = yellow_taxi_full_data %&gt;%
 
 vday_yellow_taxi &lt;- rbind(val_day_yellow, val_night_yellow)</code></pre>
 <pre class="r"><code>val_day_for_hire &lt;- for_hire_vehicle_data %&gt;% 
-  filter(pickup_date %in% &quot;2019-02-14&quot;)
+  filter(pickup_date %in% &quot;2019-02-14&quot;) 
 
 val_night_for_hire = for_hire_vehicle_data %&gt;% 
  filter(pickup_date == &quot;2019-02-15&quot;) %&gt;% 
@@ -395,7 +395,7 @@ write_csv(vday_for_hire_vehicle, &quot;vday_for_hire_vehicle.csv&quot;)</code></
 ##   store_and_fwd_flag = col_character()
 ## )
 ## See spec(...) for full column specifications.</code></pre>
-<pre class="r"><code>vday_for_hire_vehicle &lt;- read_csv(&quot;./data/vday_for_hire_vehicle.csv&quot;)</code></pre>
+<pre class="r"><code>vday_for_hire_vehicle &lt;- read_csv(&quot;./data/vday_for_hire_vehicle.csv&quot;) </code></pre>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   hvfhs_license_num = col_character(),
@@ -409,6 +409,11 @@ write_csv(vday_for_hire_vehicle, &quot;vday_for_hire_vehicle.csv&quot;)</code></
 ##   sr_flag = col_double()
 ## )</code></pre>
 </div>
+<div id="filtering-for-uber-and-lyft-post-cleaned-data" class="section level1">
+<h1>Filtering for Uber and Lyft Post Cleaned Data</h1>
+<pre class="r"><code>vday_for_hire_vehicle &lt;- vday_for_hire_vehicle %&gt;% 
+  filter(hvfhs_license_num %in% c(&quot;HV0003&quot;, &quot;HV0005&quot;))</code></pre>
+</div>
 <div id="sampling-datasets" class="section level1">
 <h1>Sampling datasets</h1>
 <pre class="r"><code>yellow_taxi_vday_samp &lt;- sample_frac(vday_yellow_taxi, size = 0.1) %&gt;% 
@@ -418,16 +423,25 @@ green_taxi_vday_samp &lt;- sample_frac(vday_green_taxi, size = 0.2) %&gt;%
 for_hire_vday_samp &lt;- sample_frac(vday_for_hire_vehicle, size = 0.1) %&gt;% 
   mutate(type = &quot;for hire&quot;)</code></pre>
 <p>Merge datasets</p>
-<pre class="r"><code>zone = read_xlsx(&quot;./data/taxi_zones_to_neighborhood.xlsx&quot;)
+<pre class="r"><code>zone = read_csv(&quot;./data/taxi_zones.csv&quot;)</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   zone_id = col_double(),
+##   borough = col_character(),
+##   zone = col_character(),
+##   x = col_double(),
+##   y = col_double(),
+##   shape_length = col_double(),
+##   shape_area = col_double()
+## )</code></pre>
+<pre class="r"><code>transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
 
-transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
-
-transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; = &quot;taxi_zone&quot;)) %&gt;% 
-  rename(pu_neiborhood = neighborhood,
+transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; = &quot;zone_id&quot;)) %&gt;% 
+  rename(pu_neiborhood = zone,
          pu_boro = borough) %&gt;% 
   left_join(., zone, 
-            by = c(&quot;do_location_id&quot; = &quot;taxi_zone&quot;)) %&gt;%
-  rename(do_neiborhood = neighborhood,
+            by = c(&quot;do_location_id&quot; = &quot;zone_id&quot;)) %&gt;%
+  rename(do_neiborhood = zone,
          do_boro = borough) %&gt;% 
   select(-ends_with(&quot;location_id&quot;)) %&gt;% 
   filter(do_boro == &quot;Manhattan&quot;) </code></pre>
@@ -439,10 +453,13 @@ transport_final = left_join(transport, zone, by = c(&quot;pu_location_id&quot; =
   duration = as.numeric(difftime(do_time, pu_time, units = &quot;mins&quot;))
 ) %&gt;% 
   select(-do_time, -pu_time, -do_boro)</code></pre>
-</div>
-<div id="export-final-transport-data-into-csv" class="section level1">
-<h1>Export Final Transport Data into CSV</h1>
-<pre class="r"><code>write_csv(transport_final, &quot;./data/transport_final.csv&quot;)</code></pre>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
+<pre class="r"><code>test = transport_final %&gt;% 
+  filter(pickup_date == &quot;2019-02-14&quot; &amp; dropoff_date == &quot;2019-02-15&quot;) %&gt;% 
+  filter(duration &gt;100)
+
+# Export Final Transport Data into CSV
+write_csv(transport_final, &quot;./data/transport_final.csv&quot;)</code></pre>
 </div>
 
 

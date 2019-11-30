@@ -1,13 +1,14 @@
 ---
 title: "Heat Map"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
 library(tidyverse)
-install.packages("d3heatmap")
 library(d3heatmap)
 ```
 
@@ -42,8 +43,6 @@ heatmap(man_man_matrix)
 ## Interactive using d3heatmap
 
 ```{r}
-library("d3heatmap")
-
 d3heatmap(man_man_matrix, scale = "none", colors = "RdPu")
 ```
 
