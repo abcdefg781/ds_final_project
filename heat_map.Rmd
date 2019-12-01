@@ -43,6 +43,8 @@ heatmap(man_man_matrix)
 library("d3heatmap")
 
 d3heatmap(man_man_matrix, scale = "none", colors = "RdPu")
+
+d3heatmap(man_man_matrix, scale = "none", colors = viridis(n = 256, option = "viridis"))
 ```
 
 ## Interactive using heatmaply 
@@ -50,7 +52,7 @@ d3heatmap(man_man_matrix, scale = "none", colors = "RdPu")
 ```{r}
 library("heatmaply")
 
-heatmaply(man_man_matrix, scale)
+heatmaply(man_man_matrix, colors = viridis(n = 256, option = "magma"), limits = c(1,-1))
 ```
 
 ## Matrix function
@@ -78,10 +80,45 @@ return(man_man_matrix)
 }
 ```
 
+## Heatmap function
+
+```{r}
+heatmap_function<- function(input_matrix) {
+  into_man_heatmap <- d3heatmap(input_matrix, scale = "none", colors = "RdPu") 
+  return(into_man_heatmap)
+}
+```
+
+
 ## Brooklyn to Manhattan
 
 ```{r}
 brooklyn_man_matrix <- manhattan_matrix("Brooklyn")
 
+heatmap_function(brooklyn_man_matrix)
+```
+
+## Queens to Manhattan
+
+```{r}
+queens_man_matrix <- manhattan_matrix("Queens")
+
+heatmap_function(queens_man_matrix)
+```
+
+## Bronx to Manhattan
+
+```{r}
+bronx_man_matrix <- manhattan_matrix("Bronx") 
+
+heatmap_function(bronx_man_matrix)
+```
+
+## Staten Island to Manhattan
+
+```{r}
+staten_island_matrix <- manhattan_matrix("Staten Island")
+
+heatmap_function(staten_island_matrix)
 ```
 
