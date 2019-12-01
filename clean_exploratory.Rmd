@@ -173,6 +173,18 @@ transport_final %>%
   group_by(pu_neighborhood, do_neighborhood) %>% 
   summarise() %>% 
   count() %>% 
-  ggplot(aes(x = pu_neighborhood, y = n)) + geom_col()
+  ggplot(aes(x = pu_neighborhood, y = n)) + geom_col() 
+```
+
+#bar graph for all pick-ups and drop-offs, colored by borough
+```{r}
+transport_final %>% 
+  filter(pu_boro!= "EWR") %>% 
+  select(pu_neighborhood, do_neighborhood, pu_boro) %>% 
+  group_by(pu_neighborhood, do_neighborhood, pu_boro) %>% 
+  drop_na() %>% 
+  summarize(count = n()) %>% 
+  ggplot(aes(x = do_neighborhood, y = count, fill = pu_boro)) + geom_col() +
+  coord_flip() 
 ```
 
