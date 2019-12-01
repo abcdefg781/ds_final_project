@@ -1,15 +1,12 @@
 ---
 title: "Heat Map"
 output: html_document
-editor_options: 
-  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
 library(tidyverse)
-library(d3heatmap)
 ```
 
 # Manhattan to Manhattan matrix
@@ -43,6 +40,8 @@ heatmap(man_man_matrix)
 ## Interactive using d3heatmap
 
 ```{r}
+library("d3heatmap")
+
 d3heatmap(man_man_matrix, scale = "none", colors = "RdPu")
 ```
 
@@ -54,4 +53,35 @@ library("heatmaply")
 heatmaply(man_man_matrix, scale)
 ```
 
+## Matrix function
+
+```{r}
+manhattan_matrix <- function(input_boro) {
+  man_man_df <- transport_final %>% 
+  filter(
+    pu_boro == input_boro
+  ) %>% 
+  select(
+    pu_neighborhood, do_neighborhood
+  ) %>% 
+  group_by(pu_neighborhood, do_neighborhood) %>% 
+  summarise(count = n()) %>% 
+  pivot_wider(
+    names_from = pu_neighborhood,
+    values_from = count
+  ) %>% 
+  replace(is.na(.),0)
+
+man_man_matrix <- as.matrix(man_man_df[-1])
+row.names(man_man_matrix) <- pull(man_man_df, do_neighborhood)  
+return(man_man_matrix)
+}
+```
+
+## Brooklyn to Manhattan
+
+```{r}
+brooklyn_man_matrix <- manhattan_matrix("Brooklyn")
+
+```
 
