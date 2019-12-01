@@ -326,7 +326,7 @@ $(document).ready(function () {
 <div id="plot-just-dinner-data" class="section level2">
 <h2>Plot just Dinner Data</h2>
 <pre class="r"><code>manhattan_data %&gt;% 
-  filter((pickup_date == &quot;2019-02-14&quot; &amp; pickup_hr == 6:9)) %&gt;% 
+  filter((pickup_date == &quot;2019-02-14&quot; &amp; pickup_hr == 6|7|8)) %&gt;% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 4) +
   labs(
@@ -349,7 +349,7 @@ $(document).ready(function () {
 <div id="plot-just-dinner-data-1" class="section level2">
 <h2>Plot just Dinner Data</h2>
 <pre class="r"><code>brooklyn_data %&gt;% 
-  filter((pickup_date == &quot;2019-02-14&quot; &amp; pickup_hr == 6:9)) %&gt;% 
+  filter((pickup_date == &quot;2019-02-14&quot; &amp; pickup_hr == 6|7|8)) %&gt;% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 4) +
   labs(
@@ -357,9 +357,76 @@ $(document).ready(function () {
     x = &quot;Pickup Hour&quot;,
     y = &quot;Count&quot;
   )</code></pre>
-<pre><code>## Warning in pickup_hr == 6:9: longer object length is not a multiple of
-## shorter object length</code></pre>
 <p><img src="time_distributions_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+</div>
+<div id="queens" class="section level1">
+<h1>Queens</h1>
+<div id="tidy-data-2" class="section level2">
+<h2>Tidy Data</h2>
+</div>
+<div id="plot-data-2" class="section level2">
+<h2>Plot Data</h2>
+<p><img src="time_distributions_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="plot-just-dinner-data-2" class="section level2">
+<h2>Plot just Dinner Data</h2>
+<pre class="r"><code>queens_data %&gt;% 
+  filter((pickup_date == &quot;2019-02-14&quot; &amp; pickup_hr == 6|7|8)) %&gt;% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 4) +
+  labs(
+    title = &quot;Time Distribution of Dinner Pickups in Queens&quot;,
+    x = &quot;Pickup Hour&quot;,
+    y = &quot;Count&quot;
+  )</code></pre>
+<p><img src="time_distributions_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+</div>
+<div id="bronx" class="section level1">
+<h1>Bronx</h1>
+<div id="tidy-data-3" class="section level2">
+<h2>Tidy Data</h2>
+</div>
+<div id="plot-data-3" class="section level2">
+<h2>Plot Data</h2>
+<p><img src="time_distributions_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="plot-just-dinner-data-3" class="section level2">
+<h2>Plot just Dinner Data</h2>
+<pre class="r"><code>bronx_data %&gt;% 
+  filter((pickup_date == &quot;2019-02-14&quot; &amp; pickup_hr == 6|7|8)) %&gt;% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 4) +
+  labs(
+    title = &quot;Time Distribution of Dinner Pickups in the Bronx&quot;,
+    x = &quot;Pickup Hour&quot;,
+    y = &quot;Count&quot;
+  )</code></pre>
+<p><img src="time_distributions_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+</div>
+<div id="staten-island" class="section level1">
+<h1>Staten Island</h1>
+<div id="tidy-data-4" class="section level2">
+<h2>Tidy Data</h2>
+</div>
+<div id="plot-data-4" class="section level2">
+<h2>Plot Data</h2>
+<p><img src="time_distributions_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+<div id="plot-just-dinner-data-4" class="section level2">
+<h2>Plot just Dinner Data</h2>
+<pre class="r"><code>staten_data %&gt;% 
+  filter((pickup_date == &quot;2019-02-14&quot; &amp; pickup_hr == 6|7|8)) %&gt;% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 4) +
+  labs(
+    title = &quot;Time Distribution of Dinner Pickups in Staten Island&quot;,
+    x = &quot;Pickup Hour&quot;,
+    y = &quot;Count&quot;
+  )</code></pre>
+<p><img src="time_distributions_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 </div>
 </div>
 
