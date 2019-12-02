@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # install.packages("sf")
 # install.packages("tmap")
+# install.packages("ggmap")
 
 library(tidyverse)
 library(leaflet)
@@ -22,10 +23,6 @@ library(plotly)
 # Loading in Taxi Zone Codes
 ```{r}
 taxi_zones = read.csv("./data/taxi_zones.csv")
-
-taxi_zones %>% 
-  ggplot(aes(x = x, y = y)) +
-  geom_point()
 ```
 
 # Mapping Lat/Long
@@ -43,27 +40,41 @@ taxi_zones %>%
     ~x, ~y,
     color = ~pal(borough),
     radius = 1
-  ) %>% 
+  )
   
 ```
 
-# Mapping Zones
+# Mapping Dropoffs in Manhattan on Feb 14
 ```{r}
 zone_map_data = read_sf("./data/taxi_zones.shp")
 
-write_csv(zone_map_data, "zone_map_data.csv")
+taxi_data = 
+  read.csv("./data/transport_final.csv") 
+
+do_neighborhood_count = as.data.frame(table(taxi_data$do_neiborhood)) %>% 
+  select(zone = Var1, freq = Freq)
+
+quantile(do_neighborhood_count$freq)
+
+zone_maps_plot = left_join(zone_map_data, do_neighborhood_count, by = "zone") %>% 
+  na.omit() %>% 
+  filter(borough == "Manhattan")
 
 tmap_mode("plot")
 
 zone_map =
-  tm_shape(zone_map_data) +
-  tm_fill(col = "borough") +
-  tm_polygons("LocationID")
+  tm_shape(zone_maps_plot) +
+  tm_polygons(
+    "freq",
+    style = "quantile",
+    ) +
+  tm_layout(title = "Dropoffs in Manhattan on Feb 14", title.size = 0.6, legend.text.size = 0.5, frame = FALSE)
 
 zone_map + tm_basemap(server = "OpenTopoMap")
 
 ```
 
+# Trying to convert coordinates here (a mess)
 ```{r}
 library(rgdal)
 zone_coords =
@@ -77,8 +88,8 @@ coords = SpatialPoints (coords, proj4string = CRS ('+proj=utm +zone=18 +ellps=GR
 
 coord_WGS84 <- spTransform(coords, CRS('+proj=longlat +datum=WGS84 +no_defs'))
 
-coordinates(coords) = c("lon", "lat")
-proj4string(coords) = CRS("+init=epsg:4326")
+# coordinates(coords) = c("lon", "lat")
+# proj4string(coords) = CRS("+init=epsg:4326")
 ```
 
 ```{r}
