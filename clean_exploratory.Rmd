@@ -88,7 +88,6 @@ length(transport_final$pu_neighborhood[is.na(transport_final$pu_neighborhood)])
 # There are 1613 pickups happening in the Bronx and Staten Island
 ```
 
-
 # Make a heatmap for tips based on do and pu neighborhoods
 ```{r}
 library("gplots")
@@ -162,20 +161,6 @@ ggnet2(tp.net, labelon = TRUE,
 size = 1, vjust = -0.6, mode = "kamadakawai", label.size = 1)
 ```
 
-# Bar graph of pickups in Manhattan
-
-```{r}
-transport_final %>% 
-  filter(
-    pu_boro == "Manhattan"
-  ) %>% 
-  select(pu_neighborhood, do_neighborhood) %>% 
-  group_by(pu_neighborhood, do_neighborhood) %>% 
-  summarise() %>% 
-  count() %>% 
-  ggplot(aes(x = pu_neighborhood, y = n)) + geom_col() 
-```
-
 #bar graph for all pick-ups and drop-offs, colored by borough
 ```{r}
 transport_final %>% 
@@ -186,5 +171,11 @@ transport_final %>%
   summarize(count = n()) %>% 
   ggplot(aes(x = do_neighborhood, y = count, fill = pu_boro)) + geom_col() +
   coord_flip() 
+```
+
+# Dinner time subset of transport_final
+```{r}
+dinner_time_transport <- transport_final %>% 
+  filter(stringr::str_detect(pickup_time, '^18|^19|^20'))
 ```
 
