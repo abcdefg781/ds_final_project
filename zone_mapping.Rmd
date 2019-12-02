@@ -54,8 +54,6 @@ taxi_data =
 do_neighborhood_count = as.data.frame(table(taxi_data$do_neiborhood)) %>% 
   select(zone = Var1, freq = Freq)
 
-quantile(do_neighborhood_count$freq)
-
 zone_maps_plot = left_join(zone_map_data, do_neighborhood_count, by = "zone") %>% 
   na.omit() %>% 
   filter(borough == "Manhattan")
@@ -73,6 +71,38 @@ zone_map =
 zone_map + tm_basemap(server = "OpenTopoMap")
 
 ```
+
+# Doing the same for just Valentine's Day dinner
+```{r}
+vday_dinner_data =
+  taxi_data %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
+  select(-pickup_sec, -pickup_min, -dropoff_sec, -pickup_sec) %>% 
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    dropoff_hr = as.numeric(dropoff_hr)
+  ) %>% 
+  filter(dropoff_hr == 18 | dropoff_hr == 19 | dropoff_hr == 20)
+
+vday_do_neighborhood_count = as.data.frame(table(vday_dinner_data$do_neiborhood)) %>% 
+  select(zone = Var1, freq = Freq)
+
+vday_zone_maps_plot = left_join(zone_map_data, vday_do_neighborhood_count, by = "zone") %>% 
+  na.omit() %>% 
+  filter(borough == "Manhattan")
+
+zone_map =
+  tm_shape(vday_zone_maps_plot) +
+  tm_polygons(
+    "freq",
+    style = "quantile",
+    ) +
+  tm_layout(title = "Valentine's Dinner Dropoffs in Manhattan", title.size = 0.6, legend.text.size = 0.5, frame = FALSE)
+
+zone_map + tm_basemap(server = "OpenTopoMap")
+```
+
 
 # Trying to convert coordinates here (a mess)
 ```{r}
