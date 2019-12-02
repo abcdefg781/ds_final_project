@@ -75,9 +75,10 @@ vday_do_neighborhood_count = as.data.frame(table(vday_dinner_data$do_neiborhood)
 
 vday_zone_maps_plot = left_join(zone_map_data, vday_do_neighborhood_count, by = "zone") %>% 
   na.omit() %>% 
-  filter(borough == "Manhattan")
+  filter(borough == "Manhattan") %>% 
+  select(zone, everything())
 
-zone_map =
+vday_zone_map =
   tm_shape(vday_zone_maps_plot) +
   tm_polygons(
     "freq",
@@ -85,7 +86,7 @@ zone_map =
     ) +
   tm_layout(title = "Valentine's Dinner Dropoffs in Manhattan", title.size = 0.6, legend.text.size = 0.5, frame = FALSE)
 
-zone_map + tm_basemap(server = "OpenStreetMap")
+vday_zone_map + tm_basemap(server = "OpenStreetMap")
 ```
 
 # Doing this for cars with only 2 passengers
@@ -99,9 +100,10 @@ two_pass_dinner_count = as.data.frame(table(two_passenger_dinner_data$do_neiborh
 
 two_pass_zone_maps_plot = left_join(zone_map_data, two_pass_dinner_count, by = "zone") %>% 
   na.omit() %>% 
-  filter(borough == "Manhattan")
+  filter(borough == "Manhattan") %>% 
+  select(zone, everything())
 
-zone_map =
+two_pass_zone_map =
   tm_shape(two_pass_zone_maps_plot) +
   tm_polygons(
     "freq",
@@ -109,5 +111,5 @@ zone_map =
     ) +
   tm_layout(title = "Valentine's Dinner Dropoffs (2 Passengers)", title.size = 0.6, legend.text.size = 0.5, frame = FALSE)
 
-zone_map + tm_basemap(server = "OpenStreetMap")
+two_pass_zone_map + tm_basemap(server = "OpenStreetMap")
 ```
