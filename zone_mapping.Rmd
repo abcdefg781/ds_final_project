@@ -16,49 +16,33 @@ library(tidyverse)
 library(leaflet)
 library(viridis)
 library(sf)
+library(sp)
 library(tmap)
 library(plotly)
 ```
 
-# Loading in Taxi Zone Codes
-```{r}
-taxi_zones = read.csv("./data/taxi_zones.csv")
-```
+# Loading in Data for Taxi Zones
+```{r echo = FALSE}
+taxi_zones = read.csv("./data/taxi_zones.csv") %>% 
+  select(-shape_length, -shape_area)
 
-# Mapping Lat/Long
-```{r}
-pal = colorFactor(
-  palette = magma,
-  domain = taxi_zones$borough
-)
-
-taxi_zones %>% 
-  leaflet() %>% 
-  addTiles() %>% 
-  addProviderTiles(providers$CartoDB.Positron) %>% 
-  addCircleMarkers(
-    ~x, ~y,
-    color = ~pal(borough),
-    radius = 1
-  )
-  
+zone_map_data = read_sf("./data/nyu_2451_36743.shp")
 ```
 
 # Mapping Dropoffs in Manhattan on Feb 14
-```{r}
-zone_map_data = read_sf("./data/taxi_zones.shp")
-
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 taxi_data = 
-  read.csv("./data/transport_final.csv") 
+  read.csv("./data/transport_final.csv")
 
 do_neighborhood_count = as.data.frame(table(taxi_data$do_neiborhood)) %>% 
   select(zone = Var1, freq = Freq)
 
 zone_maps_plot = left_join(zone_map_data, do_neighborhood_count, by = "zone") %>% 
   na.omit() %>% 
-  filter(borough == "Manhattan")
+  filter(borough == "Manhattan") %>% 
+  select(zone, everything())
 
-tmap_mode("plot")
+tmap_mode("view")
 
 zone_map =
   tm_shape(zone_maps_plot) +
@@ -68,12 +52,13 @@ zone_map =
     ) +
   tm_layout(title = "Dropoffs in Manhattan on Feb 14", title.size = 0.6, legend.text.size = 0.5, frame = FALSE)
 
-zone_map + tm_basemap(server = "OpenTopoMap")
+zone_map + 
+  tm_basemap(server = "OpenStreetMap")
 
 ```
 
 # Doing the same for just Valentine's Day dinner
-```{r}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 vday_dinner_data =
   taxi_data %>% 
   separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
@@ -100,31 +85,29 @@ zone_map =
     ) +
   tm_layout(title = "Valentine's Dinner Dropoffs in Manhattan", title.size = 0.6, legend.text.size = 0.5, frame = FALSE)
 
-zone_map + tm_basemap(server = "OpenTopoMap")
+zone_map + tm_basemap(server = "OpenStreetMap")
 ```
 
+# Doing this for cars with only 2 passengers
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+two_passenger_dinner_data =
+  vday_dinner_data %>% 
+  filter(passenger_count == 2)
 
-# Trying to convert coordinates here (a mess)
-```{r}
-library(rgdal)
-zone_coords =
-  zone_map_data[[7]]
+two_pass_dinner_count = as.data.frame(table(two_passenger_dinner_data$do_neiborhood)) %>% 
+  select(zone = Var1, freq = Freq)
 
-coords = 
-  as.data.frame(zone_coords[[1]][[1]][[1]]) %>% 
-  select(lon = V1, lat = V2)
+two_pass_zone_maps_plot = left_join(zone_map_data, two_pass_dinner_count, by = "zone") %>% 
+  na.omit() %>% 
+  filter(borough == "Manhattan")
 
-coords = SpatialPoints (coords, proj4string = CRS ('+proj=utm +zone=18 +ellps=GRS80 +datum=NAD83 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs'))
+zone_map =
+  tm_shape(two_pass_zone_maps_plot) +
+  tm_polygons(
+    "freq",
+    style = "quantile",
+    ) +
+  tm_layout(title = "Valentine's Dinner Dropoffs (2 Passengers)", title.size = 0.6, legend.text.size = 0.5, frame = FALSE)
 
-coord_WGS84 <- spTransform(coords, CRS('+proj=longlat +datum=WGS84 +no_defs'))
-
-# coordinates(coords) = c("lon", "lat")
-# proj4string(coords) = CRS("+init=epsg:4326")
+zone_map + tm_basemap(server = "OpenStreetMap")
 ```
-
-```{r}
-zone_map_data %>% 
-  leaflet() %>% 
-  addProviderTiles(providers$CartoDB.Positron) 
-```
-
