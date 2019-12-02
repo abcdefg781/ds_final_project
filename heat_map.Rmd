@@ -9,57 +9,13 @@ library(readr)
 library(tidyverse)
 ```
 
-# Manhattan to Manhattan matrix
-
-```{r}
-man_man_df <- transport_final %>% 
-  filter(
-    pu_boro == "Manhattan"
-  ) %>% 
-  select(
-    pu_neighborhood, do_neighborhood
-  ) %>% 
-  group_by(pu_neighborhood, do_neighborhood) %>% 
-  summarise(count = n()) %>% 
-  pivot_wider(
-    names_from = pu_neighborhood,
-    values_from = count
-  ) %>% 
-  replace(is.na(.),0)
-
-man_man_matrix <- as.matrix(man_man_df[-1])
-row.names(man_man_matrix) <- pull(man_man_df, do_neighborhood) # do_neighborhood = row.names
-```
-
-## Heat map with base R 'heatmap'
-
-```{r}
-heatmap(man_man_matrix)
-```
-
-## Interactive using d3heatmap
-
-```{r}
-library("d3heatmap")
-
-d3heatmap(man_man_matrix, scale = "none", colors = "RdPu")
-
-d3heatmap(man_man_matrix, scale = "none", colors = viridis(n = 256, option = "viridis"))
-```
-
-## Interactive using heatmaply 
-
-```{r}
-library("heatmaply")
-
-heatmaply(man_man_matrix, colors = viridis(n = 256, option = "magma"), limits = c(1,-1))
-```
+# Functions for heatmaps 
 
 ## Matrix function
 
 ```{r}
-manhattan_matrix <- function(input_boro) {
-  man_man_df <- transport_final %>% 
+manhattan_matrix <- function(input_boro, input_df) {
+  man_man_df <- input_df %>% 
   filter(
     pu_boro == input_boro
   ) %>% 
@@ -83,17 +39,27 @@ return(man_man_matrix)
 ## Heatmap function
 
 ```{r}
-heatmap_function<- function(input_matrix) {
+heatmap_function <- function(input_matrix) {
   into_man_heatmap <- d3heatmap(input_matrix, scale = "none", colors = "RdPu") 
   return(into_man_heatmap)
 }
+```
+
+# All of Valentine's day
+
+## Manhattan to Manhattan
+
+```{r}
+man_man_matrix <- manhattan_matrix("Manhattan", transport_final)
+
+heatmap_function(man_man_matrix)
 ```
 
 
 ## Brooklyn to Manhattan
 
 ```{r}
-brooklyn_man_matrix <- manhattan_matrix("Brooklyn")
+brooklyn_man_matrix <- manhattan_matrix("Brooklyn", transport_final)
 
 heatmap_function(brooklyn_man_matrix)
 ```
@@ -101,7 +67,7 @@ heatmap_function(brooklyn_man_matrix)
 ## Queens to Manhattan
 
 ```{r}
-queens_man_matrix <- manhattan_matrix("Queens")
+queens_man_matrix <- manhattan_matrix("Queens", transport_final)
 
 heatmap_function(queens_man_matrix)
 ```
@@ -109,7 +75,7 @@ heatmap_function(queens_man_matrix)
 ## Bronx to Manhattan
 
 ```{r}
-bronx_man_matrix <- manhattan_matrix("Bronx") 
+bronx_man_matrix <- manhattan_matrix("Bronx", transport_final) 
 
 heatmap_function(bronx_man_matrix)
 ```
@@ -117,8 +83,51 @@ heatmap_function(bronx_man_matrix)
 ## Staten Island to Manhattan
 
 ```{r}
-staten_island_matrix <- manhattan_matrix("Staten Island")
+staten_island_matrix <- manhattan_matrix("Staten Island", transport_final)
 
 heatmap_function(staten_island_matrix)
+```
+
+# Dinner time Valentine's Day
+
+## Manhattan to Manhattan
+
+```{r}
+man_man_dinner <- manhattan_matrix("Manhattan", dinner_time_transport)
+
+heatmap_function(man_man_dinner)
+```
+
+
+## Brooklyn to Manhattan
+
+```{r}
+brooklyn_man_dinner <- manhattan_matrix("Brooklyn", dinner_time_transport)
+
+heatmap_function(brooklyn_man_dinner)
+```
+
+## Queens to Manhattan
+
+```{r}
+queens_man_dinner <- manhattan_matrix("Queens", dinner_time_transport)
+
+heatmap_function(queens_man_dinner)
+```
+
+## Bronx to Manhattan
+
+```{r}
+bronx_man_dinner <- manhattan_matrix("Bronx", dinner_time_transport) 
+
+heatmap_function(bronx_man_dinner)
+```
+
+## Staten Island to Manhattan
+
+```{r}
+staten_island_dinner <- manhattan_matrix("Staten Island", dinner_time_transport)
+
+heatmap_function(staten_island_dinner)
 ```
 
