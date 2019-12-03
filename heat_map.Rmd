@@ -176,3 +176,67 @@ staten_island_late <- manhattan_matrix("Staten Island", late_night_transport)
 
 heatmap_function(staten_island_late)
 ```
+
+
+# Wait time heat maps
+```{r}
+congestion_data = 
+  taxi_data %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
+  select(-pickup_sec, -dropoff_sec) %>% 
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  ) %>% 
+mutate(congestion = 
+         (fare_amount - (trip_distance*2.5) -2.5)/.5) %>% 
+  filter(congestion>=0)%>% 
+mutate(wait_pct = congestion/duration) %>% 
+  group_by(type, pickup_hr, pu_neiborhood, do_neiborhood) %>%  
+  summarize(avg_congestion = mean(congestion),
+            avg_wait_pct = mean(wait_pct))
+```
+
+```{r}
+congestion_matrix <- function(input_boro) {
+  congestion_data = 
+  transport_final %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
+  select(-pickup_sec, -dropoff_sec) %>% 
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  ) %>% 
+mutate(congestion = 
+         (fare_amount - (trip_distance*2.5) -2.5)/.5) %>% 
+  filter(congestion>=0)%>% 
+mutate(wait_pct = congestion/duration) %>% 
+  group_by(type, pickup_hr, pu_neighborhood, do_neighborhood) %>%  
+  summarize(avg_congestion = mean(congestion),
+            avg_wait_pct = mean(wait_pct)) %>% 
+    select()
+    arrange(do_neighborhood) %>% 
+    pivot_wider(
+      names_from = pu_neighborhood,
+      values_from = 
+    )
+  
+man_man_congestion_matrix <- as.matrix(congestion_data[-1])
+row.names(man_man_congestion_matrix) <- pull(congestion_data, do_neighborhood)  
+return(man_man_congestion_matrix)  
+}
+```
+
+## Manhattan to Manhattan 
+```{r}
+man_man_congestion_matrix <- congestion_matrix("Manhattan")
+
+heatmap_function(man_man_congestion_matrix)
+```
+
