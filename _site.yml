@@ -3,7 +3,7 @@ output_dir: "."
 navbar:
   title: "Home"
   right:
-    - text: "History"
+    - text: "Project Background"
       href: about.html
     - text: "Graphs and Charts"
       menu:
@@ -11,8 +11,10 @@ navbar:
         href: plotly.html
       - text: "Dashboard"
         href: dashboard.html
+    - text: "Shiny"
+      href: http://
     - icon: fa-github fa-lg
       href: http://github.com/jamespng3/
 output:
   html_document:
-    theme: cerulean
+    css: united.css
