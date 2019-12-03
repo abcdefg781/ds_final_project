@@ -7,12 +7,12 @@ navbar:
       href: about.html
     - text: "Graphs and Charts"
       menu:
-      - text: "Plotly"
-        href: plotly.html
-      - text: "Dashboard"
-        href: dashboard.html
+      - text: "Heatmaps"
+        href: heatmaps.html
+      - text: "Time Distributions"
+        href: timedist.html
     - text: "Shiny"
-      href: http://
+      href: https://ngduong.shinyapps.io/doexplore/?fbclid=IwAR05Ib9AFD60fWIZ9bHZNYzezL7hoAzzre_chAOZ60Ig7TlzBTJCmEC3_wQ
     - icon: fa-github fa-lg
       href: http://github.com/jamespng3/
 output:
