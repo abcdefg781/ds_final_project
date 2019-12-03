@@ -63,7 +63,7 @@ vday_zone_map =
     ) +
   tm_layout(title = "Valentine's Dinner Dropoffs in Manhattan", title.size = 0.6, legend.text.size = 0.5, frame = FALSE)
 
-vday_zone_map + tm_basemap(server = "OpenStreetMap")
+vday_zone_map 
 ```
 
 # Doing this for cars with only 2 passengers
@@ -88,5 +88,5 @@ two_pass_zone_map =
     ) +
   tm_layout(title = "Valentine's Dinner Dropoffs (2 Passengers)", title.size = 0.6, legend.text.size = 0.5, frame = FALSE)
 
-two_pass_zone_map + tm_basemap(server = "OpenStreetMap")
+two_pass_zone_map
 ```
