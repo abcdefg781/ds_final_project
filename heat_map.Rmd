@@ -14,6 +14,7 @@ library(d3heatmap)
 
 ## Matrix function
 
+
 ```{r}
 manhattan_matrix <- function(input_boro, input_df) {
   man_man_df <- input_df %>% 
@@ -29,7 +30,8 @@ manhattan_matrix <- function(input_boro, input_df) {
     names_from = pu_neighborhood,
     values_from = count
   ) %>% 
-  replace(is.na(.),0)
+  replace(is.na(.),0) %>% 
+  arrange(do_neighborhood) 
 
 man_man_matrix <- as.matrix(man_man_df[-1])
 row.names(man_man_matrix) <- pull(man_man_df, do_neighborhood)  
@@ -41,7 +43,7 @@ return(man_man_matrix)
 
 ```{r}
 heatmap_function <- function(input_matrix) {
-  into_man_heatmap <- d3heatmap(input_matrix, scale = "none", colors = "RdPu") 
+  into_man_heatmap <- d3heatmap(input_matrix, scale = "none", colors = "RdPu",  dendrogram = "none", Rowv = FALSE, Colv = FALSE) 
   return(into_man_heatmap)
 }
 ```
