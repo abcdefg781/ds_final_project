@@ -1,7 +1,6 @@
 ---
 title: "Final Project Website - Exploring the Taxi habits of NY on Valentines day"
 author: "Data Science Group 31 - Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin"
-date: "11/21/2019"
 output: html_document
 ---
 
@@ -9,8 +8,14 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Project overview
+
+<p>
+  We limited our data to taxis going into manhattan due to the shear size of the data available. Our logic is that this also reflects that the borogh with the most people and most things to do and events on valentines day would be in manhattan. After filtering our data we still had to take a fraction of the data for each taxi line (10% for yellow and for hire cabs, 20% for green taxis) as the data was still too large to manage.
+</p>
+
 ## General Trends
-<p></tab>
+<p>
 
 
 </p>

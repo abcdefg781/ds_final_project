@@ -1,7 +1,6 @@
 ---
 title: "P8105 Final Project - Exploring the Taxi habits of NY on Valentine's day"
 author: "Data Science Group 31 - Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin"
-date: "11/21/2019"
 output: html_document
 ---
 
