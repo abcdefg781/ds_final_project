@@ -8,6 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(viridis)
 library(lubridate)
+library(plotly)
 ```
 
 
@@ -35,7 +36,8 @@ manhattan_data =
 
 ## Plot Data
 ```{r echo = FALSE, message = FALSE}
-manhattan_data %>% 
+manhattan_plot =
+  manhattan_data %>% 
   group_by(pickup_date) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 24) +
@@ -44,12 +46,15 @@ manhattan_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(manhattan_plot)
 ```
 
 ## Plot just Dinner Data
 ```{r}
-manhattan_data %>% 
-  filter((pickup_date == "2019-02-14" & pickup_hr == 6|7|8)) %>% 
+manhattan_dinner =
+  manhattan_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 4) +
   labs(
@@ -57,6 +62,8 @@ manhattan_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(manhattan_dinner)
 ```
 
 # Brooklyn
@@ -79,7 +86,8 @@ brooklyn_data =
 
 ## Plot Data
 ```{r echo = FALSE, message = FALSE}
-brooklyn_data %>% 
+brooklyn_plot =
+  brooklyn_data %>% 
   group_by(pickup_date) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 24) +
@@ -88,12 +96,15 @@ brooklyn_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(brooklyn_plot)
 ```
 
 ## Plot just Dinner Data
 ```{r}
-brooklyn_data %>% 
-  filter((pickup_date == "2019-02-14" & pickup_hr == 6|7|8)) %>% 
+brooklyn_dinner =
+  brooklyn_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 4) +
   labs(
@@ -101,6 +112,8 @@ brooklyn_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(brooklyn_dinner)
 ```
 
 # Queens
@@ -123,7 +136,8 @@ queens_data =
 
 ## Plot Data
 ```{r echo = FALSE, message = FALSE}
-queens_data %>% 
+queens_plot =
+  queens_data %>% 
   group_by(pickup_date) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 24) +
@@ -132,12 +146,15 @@ queens_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(queens_plot)
 ```
 
 ## Plot just Dinner Data
 ```{r}
-queens_data %>% 
-  filter((pickup_date == "2019-02-14" & pickup_hr == 6|7|8)) %>% 
+queens_dinner =
+  queens_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 4) +
   labs(
@@ -145,6 +162,8 @@ queens_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(queens_dinner)
 ```
 
 # Bronx
@@ -167,7 +186,8 @@ bronx_data =
 
 ## Plot Data
 ```{r echo = FALSE, message = FALSE}
-bronx_data %>% 
+bronx_plot =
+  bronx_data %>% 
   group_by(pickup_date) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 24) +
@@ -176,12 +196,15 @@ bronx_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(bronx_plot)
 ```
 
 ## Plot just Dinner Data
 ```{r}
-bronx_data %>% 
-  filter((pickup_date == "2019-02-14" & pickup_hr == 6|7|8)) %>% 
+bronx_dinner =
+  bronx_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 4) +
   labs(
@@ -189,6 +212,8 @@ bronx_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(bronx_dinner)
 ```
 
 # Staten Island
@@ -211,7 +236,8 @@ staten_data =
 
 ## Plot Data
 ```{r echo = FALSE, message = FALSE}
-staten_data %>% 
+staten_plot =
+  staten_data %>% 
   group_by(pickup_date) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 24) +
@@ -220,12 +246,15 @@ staten_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(staten_plot)
 ```
 
 ## Plot just Dinner Data
 ```{r}
-staten_data %>% 
-  filter((pickup_date == "2019-02-14" & pickup_hr == 6|7|8)) %>% 
+staten_dinner =
+  staten_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
   ggplot(aes(x = pickup_hr)) +
   geom_histogram(bins = 4) +
   labs(
@@ -233,5 +262,7 @@ staten_data %>%
     x = "Pickup Hour",
     y = "Count"
   )
+
+ggplotly(staten_dinner)
 ```
 
