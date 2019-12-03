@@ -179,3 +179,12 @@ dinner_time_transport <- transport_final %>%
   filter(stringr::str_detect(pickup_time, '^18|^19|^20'))
 ```
 
+## Late night subset of transport_final
+```{r}
+late_night_transport <- transport_final %>% 
+  filter(
+    stringr::str_detect(pickup_time, '^21|^22|^23')|
+    pickup_date == "2019-02-15"
+    )
+```
+

@@ -7,6 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(readr)
 library(tidyverse)
+library(d3heatmap)
 ```
 
 # Functions for heatmaps 
@@ -131,3 +132,45 @@ staten_island_dinner <- manhattan_matrix("Staten Island", dinner_time_transport)
 heatmap_function(staten_island_dinner)
 ```
 
+# Late Night 
+
+## Manhattan to Manhattan
+
+```{r}
+man_man_late <- manhattan_matrix("Manhattan", late_night_transport)
+
+heatmap_function(man_man_late)
+```
+
+
+## Brooklyn to Manhattan
+
+```{r}
+brooklyn_man_late <- manhattan_matrix("Brooklyn", late_night_transport)
+
+heatmap_function(brooklyn_man_late)
+```
+
+## Queens to Manhattan
+
+```{r}
+queens_man_late <- manhattan_matrix("Queens", late_night_transport)
+
+heatmap_function(queens_man_late)
+```
+
+## Bronx to Manhattan
+
+```{r}
+bronx_man_late <- manhattan_matrix("Bronx", late_night_transport) 
+
+heatmap_function(bronx_man_late)
+```
+
+## Staten Island to Manhattan
+
+```{r}
+staten_island_late <- manhattan_matrix("Staten Island", late_night_transport)
+
+heatmap_function(staten_island_late)
+```
