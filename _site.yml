@@ -18,3 +18,5 @@ navbar:
 output:
   html_document:
     css: united.css
+    toc: true
+    toc_float: true
