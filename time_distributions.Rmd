@@ -10,17 +10,15 @@ library(lubridate)
 library(plotly)
 ```
 
-
 ```{r include = FALSE}
-taxi_data = read_csv("./data/transport_final.csv")
+transport_final = read_csv("./data/transport_final.csv")
 ```
 
-# Manhattan
-## Tidy Data
-```{r echo = FALSE, message = FALSE}
-manhattan_data = 
-  taxi_data %>% 
-  filter(pu_boro == "Manhattan") %>% 
+## Separating times function
+```{r}
+time_dist_function <- function(input_boro) {manhattan_data = 
+  transport_final %>% 
+  filter(pu_boro == input_boro) %>% 
   select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
   separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
   separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
@@ -31,6 +29,14 @@ manhattan_data =
     dropoff_hr = as.numeric(dropoff_hr),
     dropoff_min = as.numeric(dropoff_min)
   )
+return(manhattan_data)
+}
+```
+
+# Manhattan
+## Tidy Data
+```{r}
+time_dist_function("Manhattan")
 ```
 
 ## Plot Data
@@ -67,20 +73,8 @@ ggplotly(manhattan_dinner)
 
 # Brooklyn
 ## Tidy Data
-```{r echo = FALSE, message = FALSE}
-brooklyn_data =
-  taxi_data %>% 
-  filter(pu_boro == "Brooklyn") %>% 
-  select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
-  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
-  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
-  select(-pickup_sec, -dropoff_sec) %>% 
-  mutate(
-    pickup_hr = as.numeric(pickup_hr),
-    pickup_min = as.numeric(pickup_min),
-    dropoff_hr = as.numeric(dropoff_hr),
-    dropoff_min = as.numeric(dropoff_min)
-  )
+```{r}
+time_dist_function("Brooklyn")
 ```
 
 ## Plot Data
@@ -117,20 +111,8 @@ ggplotly(brooklyn_dinner)
 
 # Queens
 ## Tidy Data
-```{r echo = FALSE, message = FALSE}
-queens_data =
-  taxi_data %>% 
-  filter(pu_boro == "Queens") %>% 
-  select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
-  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
-  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
-  select(-pickup_sec, -dropoff_sec) %>% 
-  mutate(
-    pickup_hr = as.numeric(pickup_hr),
-    pickup_min = as.numeric(pickup_min),
-    dropoff_hr = as.numeric(dropoff_hr),
-    dropoff_min = as.numeric(dropoff_min)
-  )
+```{r}
+time_dist_function("Queens")
 ```
 
 ## Plot Data
@@ -167,20 +149,8 @@ ggplotly(queens_dinner)
 
 # Bronx
 ## Tidy Data
-```{r echo = FALSE, message = FALSE}
-bronx_data =
-  taxi_data %>% 
-  filter(pu_boro == "Bronx") %>% 
-  select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
-  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
-  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
-  select(-pickup_sec, -dropoff_sec) %>% 
-  mutate(
-    pickup_hr = as.numeric(pickup_hr),
-    pickup_min = as.numeric(pickup_min),
-    dropoff_hr = as.numeric(dropoff_hr),
-    dropoff_min = as.numeric(dropoff_min)
-  )
+```{r}
+time_dist_function("Bronx")
 ```
 
 ## Plot Data
@@ -217,20 +187,8 @@ ggplotly(bronx_dinner)
 
 # Staten Island
 ## Tidy Data
-```{r echo = FALSE, message = FALSE}
-staten_data =
-  taxi_data %>% 
-  filter(pu_boro == "Staten Island") %>% 
-  select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
-  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
-  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
-  select(-pickup_sec, -dropoff_sec) %>% 
-  mutate(
-    pickup_hr = as.numeric(pickup_hr),
-    pickup_min = as.numeric(pickup_min),
-    dropoff_hr = as.numeric(dropoff_hr),
-    dropoff_min = as.numeric(dropoff_min)
-  )
+```{r}
+time_dist_function("Staten Island")
 ```
 
 ## Plot Data
