@@ -29,10 +29,10 @@ taxi_data =
 tmap_mode("view")
 ```
 
-Column {data-width=650}
+Interactive Maps for Manhattan Dropoffs during Dinner on Valentine's Day {data-width=650}
 -----------------------------------------------------------------------
 
-### Interactive Map for Manhattan Dropoffs during Dinner on Valentine's Day 
+### All Dropoffs
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 vday_dinner_data =
@@ -65,10 +65,7 @@ vday_zone_map =
 vday_zone_map 
 ```
 
-Column {data-width=650}
------------------------------------------------------------------------
-
-### Interactive Map for Manhattan Dropoffs during Dinner on Valentine's Day with 2 Passengers Only
+### Dropoffs with only 2 Passengers
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 two_passenger_dinner_data =
