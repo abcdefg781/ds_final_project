@@ -31,12 +31,10 @@ We wanted to learn more about the traffic flow into Manhattan on Valentine's Day
 
 The first four graphs show the frequency of rides into Manhattan from each borough throughout the entire day. We were interested in seeing how these changed for Valentine's Day plans, though, so we created a second set of four graphs just between the hours of 6-9 PM to see when people were leaving for their Valentine's Day plans.
 
-# Time Distribution Graphs for Valentine's Day
-## Manhattan to Manhattan
-```{r}
-manhattan_data = 
+```{r echo = FALSE, message = FALSE}
+time_dist_function <- function(input_boro) {manhattan_data = 
   transport_final %>% 
-  filter(pu_boro == "Manhattan") %>% 
+  filter(pu_boro == input_boro) %>% 
   select(pickup_date, pickup_time, dropoff_date, dropoff_time, type) %>% 
   separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
   separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
@@ -47,7 +45,17 @@ manhattan_data =
     dropoff_hr = as.numeric(dropoff_hr),
     dropoff_min = as.numeric(dropoff_min)
   )
+return(manhattan_data)
+}
+```
 
+# Time Distribution Graphs for Valentine's Day
+## Manhattan to Manhattan
+```{r}
+manhattan_data <- time_dist_function("Manhattan")
+```
+
+```{r}
 manhattan_plot =
   manhattan_data %>% 
   group_by(pickup_date) %>% 
@@ -64,21 +72,12 @@ ggplotly(manhattan_plot)
 ```
 
 ## Brooklyn to Manhattan
-``` {r}
-brooklyn_data =
-  transport_final %>% 
-  filter(pu_boro == "Brooklyn") %>% 
-  select(pickup_date, pickup_time, dropoff_date, dropoff_time, type) %>% 
-  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
-  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
-  select(-pickup_sec, -dropoff_sec) %>% 
-  mutate(
-    pickup_hr = as.numeric(pickup_hr),
-    pickup_min = as.numeric(pickup_min),
-    dropoff_hr = as.numeric(dropoff_hr),
-    dropoff_min = as.numeric(dropoff_min)
-  )
 
+```{r}
+brooklyn_data <- time_dist_function("Brooklyn")
+```
+
+``` {r}
 brooklyn_plot =
   brooklyn_data %>% 
   group_by(pickup_date) %>% 
@@ -96,20 +95,10 @@ ggplotly(brooklyn_plot)
 
 ## Queens to Manhattan
 ```{r}
-queens_data =
-  transport_final %>% 
-  filter(pu_boro == "Queens") %>% 
-  select(pickup_date, pickup_time, dropoff_date, dropoff_time, type) %>% 
-  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
-  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
-  select(-pickup_sec, -dropoff_sec) %>% 
-  mutate(
-    pickup_hr = as.numeric(pickup_hr),
-    pickup_min = as.numeric(pickup_min),
-    dropoff_hr = as.numeric(dropoff_hr),
-    dropoff_min = as.numeric(dropoff_min)
-  )
+queens_data <- time_dist_function("Queens")
+```
 
+```{r}
 queens_plot =
   queens_data %>% 
   group_by(pickup_date) %>% 
@@ -126,21 +115,11 @@ ggplotly(queens_plot)
 ```
 
 ## Bronx to Manhattan
-```{r echo = FALSE, message = FALSE}
-bronx_data =
-  transport_final %>% 
-  filter(pu_boro == "Bronx") %>% 
-  select(pickup_date, pickup_time, dropoff_date, dropoff_time, type) %>% 
-  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
-  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
-  select(-pickup_sec, -dropoff_sec) %>% 
-  mutate(
-    pickup_hr = as.numeric(pickup_hr),
-    pickup_min = as.numeric(pickup_min),
-    dropoff_hr = as.numeric(dropoff_hr),
-    dropoff_min = as.numeric(dropoff_min)
-  )
+```{r}
+bronx_data <- time_dist_function("Bronx")
+```
 
+```{r echo = FALSE, message = FALSE}
 bronx_plot =
   bronx_data %>% 
   group_by(pickup_date) %>% 

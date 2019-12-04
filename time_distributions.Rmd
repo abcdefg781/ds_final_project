@@ -36,7 +36,7 @@ return(manhattan_data)
 # Manhattan
 ## Tidy Data
 ```{r}
-time_dist_function("Manhattan")
+manhattan_data <- time_dist_function("Manhattan")
 ```
 
 ## Plot Data
@@ -74,7 +74,7 @@ ggplotly(manhattan_dinner)
 # Brooklyn
 ## Tidy Data
 ```{r}
-time_dist_function("Brooklyn")
+brooklyn_data <- time_dist_function("Brooklyn")
 ```
 
 ## Plot Data
@@ -112,7 +112,7 @@ ggplotly(brooklyn_dinner)
 # Queens
 ## Tidy Data
 ```{r}
-time_dist_function("Queens")
+queens_data <- time_dist_function("Queens")
 ```
 
 ## Plot Data
@@ -150,7 +150,7 @@ ggplotly(queens_dinner)
 # Bronx
 ## Tidy Data
 ```{r}
-time_dist_function("Bronx")
+bronx_data <- time_dist_function("Bronx")
 ```
 
 ## Plot Data
@@ -188,7 +188,7 @@ ggplotly(bronx_dinner)
 # Staten Island
 ## Tidy Data
 ```{r}
-time_dist_function("Staten Island")
+staten_data <- time_dist_function("Staten Island")
 ```
 
 ## Plot Data
