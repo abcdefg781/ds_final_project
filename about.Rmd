@@ -103,28 +103,38 @@ The trends show that congestion in manhattan is pretty consistent whereas it flu
 
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
 congestion_matrix <- function(input_boro) {
-  congestion = congestion_data %>%  
-  group_by(type, pickup_hr, pu_neighborhood, do_neighborhood) %>%  
+  congestion_map = congestion_data %>% 
+  filter(pu_boro == input_boro) %>%
+  group_by(pu_neighborhood, do_neighborhood) %>%  
   summarize(avg_congestion = mean(congestion),
             avg_wait_pct = mean(wait_pct)) %>% 
-    select()
     arrange(do_neighborhood) %>% 
-    pivot_wider(
-      names_from = pu_neighborhood,
-      values_from = 
-    )
-```
-
-```{r }
-man_man_matrix <- as.matrix(man_man_df[-1])
-row.names(man_man_matrix) <- pull(man_man_df, do_neighborhood)  
-return(man_man_matrix)
+  select(pu_neighborhood, do_neighborhood, avg_wait_pct) %>% 
+  pivot_wider(
+    names_from = pu_neighborhood,
+    values_from = avg_wait_pct
+  ) %>% 
+  replace(is.na(.),0) %>% 
+  arrange(do_neighborhood) 
+    
+man_man_congestion_matrix <- as.matrix(congestion_map[-1])
+row.names(man_man_congestion_matrix) <- pull(congestion_map, do_neighborhood)  
+return(man_man_congestion_matrix)  
 }
 
 heatmap_function <- function(input_matrix) {
   into_man_heatmap <- d3heatmap(input_matrix, scale = "none", colors = "RdPu",  dendrogram = "none", Rowv = FALSE, Colv = FALSE) 
   return(into_man_heatmap)
 }
-    
 ```
 
+## Manhattan to Manhattan 
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+man_man_congestion_matrix <- congestion_matrix("Manhattan")
+
+heatmap_function(man_man_congestion_matrix)
+```
+ 
+<p>
+From this heatmap, you can see that the average congestion in manhattan
+</p>
