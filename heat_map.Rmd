@@ -10,6 +10,11 @@ library(tidyverse)
 library(d3heatmap)
 ```
 
+```{r}
+transport_final <- read_csv("./data/transport_final.csv")
+```
+
+
 # Functions for heatmaps 
 
 ## Matrix function
