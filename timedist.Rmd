@@ -5,8 +5,204 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+	echo = FALSE,
+	warning = FALSE
+)
+library(tidyverse)
+library(lubridate)
+library(plotly)
+
+transport_final = read_csv("./data/transport_final.csv")
 ```
 
-## plotly
+We wanted to learn more about the traffic flow into Manhattan on Valentine's Day, so we did a visual analysis based on time distribution of rides going into Manhattan from all five boroughs. After a preliminary analysis of the data for Staten Island, though, we decided to omit that data since there was not enough to draw meaningful conclusions. There were few taxi rides throughout the day, and only 3 taxi rides total during dinner hours, so we decided to focus on trips from the other four boroughs into Manhattan.
+
+The first four graphs show the frequency of rides into Manhattan from each borough throughout the entire day. We were interested in seeing how these changed for Valentine's Day plans, though, so we created a second set of four graphs just between the hours of 6-9 PM to see when people were leaving for their Valentine's Day plans.
+
+# Time Distribution Graphs for Valentine's Day
+## Manhattan to Manhattan
+```{r}
+manhattan_data = 
+  transport_final %>% 
+  filter(pu_boro == "Manhattan") %>% 
+  select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
+  select(-pickup_sec, -dropoff_sec) %>% 
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  )
+
+manhattan_plot =
+  manhattan_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 24, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Pickups in Manhattan on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(manhattan_plot)
+```
+
+## Brooklyn to Manhattan
+``` {r}
+brooklyn_data =
+  transport_final %>% 
+  filter(pu_boro == "Brooklyn") %>% 
+  select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
+  select(-pickup_sec, -dropoff_sec) %>% 
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  )
+
+brooklyn_plot =
+  brooklyn_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 24, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Pickups in Brooklyn on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(brooklyn_plot)
+```
+
+## Queens to Manhattan
+```{r}
+queens_data =
+  transport_final %>% 
+  filter(pu_boro == "Queens") %>% 
+  select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
+  select(-pickup_sec, -dropoff_sec) %>% 
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  )
+
+queens_plot =
+  queens_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 24, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Pickups in Queens on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(queens_plot)
+```
+
+## Bronx to Manhattan
+```{r echo = FALSE, message = FALSE}
+bronx_data =
+  transport_final %>% 
+  filter(pu_boro == "Bronx") %>% 
+  select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
+  select(-pickup_sec, -dropoff_sec) %>% 
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  )
+
+bronx_plot =
+  bronx_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 24, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Pickups in the Bronx on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(bronx_plot)
+```
+
+# Time Distribution Graphs for Dinner Hours on Valentine's Day
+## Manhattan to Manhattan
+```{r}
+manhattan_dinner =
+  manhattan_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 3, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Manhattan",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(manhattan_dinner)
+```
+
+## Brooklyn to Manhattan
+```{r}
+brooklyn_dinner =
+  brooklyn_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 3, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Brooklyn",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(brooklyn_dinner)
+```
+
+## Queens to Manhattan
+```{r}
+queens_dinner =
+  queens_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 3, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Queens",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(queens_dinner)
+```
+
+## Bronx to Manhattan
+```{r}
+bronx_dinner =
+  bronx_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 3, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in the Bronx",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(bronx_dinner)
+```
 
