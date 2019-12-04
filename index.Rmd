@@ -1,5 +1,5 @@
 ---
-title: "P8105 Final Project - Exploring the Taxi habits of NY on Valentine's day"
+title: "P8105 Final Project - Exploring the Taxi habits of NYers on Valentine's day"
 author: "Data Science Group 31 - Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin"
 output: html_document
 ---
@@ -18,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
   </style>  
 </head>
 <p>
-The New York City <b>Taxi and Limousine Commission (NYC TLC)</b> is a New York City government agency that licenses and regulates the medallion taxis and for-hire vehicle industries, including app-based companies such as Lyft and Uber. The [NYC TLC](https://www1.nyc.gov/site/tlc/index.page) requires reporting of various information, such as pickup locations and fares, which is used internally to help the NYC TLC develop policies. This [data](https://www1.nyc.gov/site/tlc/about/data.page) is made available to the public. Our team was interesting in using this data for one thing, to see where people are going on Valentine's Day. Where are the hot places to take a date? Or spend an evening drinking or dancing? We explored the data to see where people are going and to see how far they are willing to travel to enjoy their night out.
+The New York City <b>Taxi and Limousine Commission (NYC TLC)</b> is a New York City government agency that licenses and regulates the medallion taxis and for-hire vehicle industries, including app-based companies such as Lyft and Uber. The [NYC TLC](https://www1.nyc.gov/site/tlc/index.page) requires reporting of various information, such as pickup locations and fares, which is used internally to help the NYC TLC develop policies. This [data](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page) is made available to the public and [this pdf](https://www1.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_yellow.pdf) can be used to interpret the data. Our team was interesting in using this data to answer one very important question, where are people going on Valentine's Day? Where are the hot places to take a date? Or spend an evening drinking or dancing? We explored the data to see where people are going and to see how far they are willing to travel to enjoy a romantic night out.
 </p>
 
 <center> <img src="images/hearts.jpg" style="width:75%"> </center>
