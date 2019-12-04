@@ -13,6 +13,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Heatmaps
 
+To further investigate where people go on Valentine's Day via taxi or for hire car services, we made several heat maps to breakdown where people from each borough were coming into Manhattan. Due to the lack of drop-offs in Manhattan from Staten Island, we do not include Staten Island rides in any of the heat maps.  
+
+The zones represented by the rows are the drop off locations in Manhattan, and the zones represented by the columns are the pick up locations in the respective borough. Both are arranged alphabetically for ease of finding specific pick-up to drop-off locations. 
+
+To see how many trips occurred between the desired locations, hover over the grid with the mouse. To zoom in on a specific area of any heat map, drag the mouse over the desired area. 
+
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
 vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
@@ -88,6 +94,10 @@ heatmap_function <- function(input_matrix) {
 }
 ```
 
+# All of Valentine's Day
+
+The first set of heat maps looks at all the rides on Valentine's Day, including midnight to 2 AM on February 15th to account for post dinner plans. 
+
 ## Manhattan to Manhattan
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
@@ -121,7 +131,11 @@ bronx_man_matrix <- manhattan_matrix("Bronx", transport_final)
 heatmap_function(bronx_man_matrix)
 ```
 
-# Dinner time Valentine's Day
+# Dinner time on Valentine's Day
+
+Especially since Valentine's Day in 2019 was on a Thursday, most Valentine's Day plans would be scheduled after work. Since many restaurants and businesses have Valentine's Day events or specials, we decided to look at Manhattan drop offs from 6 to 9 PM. 
+
+The following heat maps only encompass the dinner time period, allocated between 6 PM to 9 PM. 
 
 ## Manhattan to Manhattan
 
@@ -157,7 +171,11 @@ heatmap_function(bronx_man_dinner)
 ```
 
 
-# Late Night 
+# Post Dinner on Valentine's Day  
+
+~ blurb ~
+
+The following heat maps encompass only the later night hours from 9 PM of Valentine's Day to 2 AM of February 15th. 
 
 ## Manhattan to Manhattan
 
@@ -191,6 +209,4 @@ bronx_man_late <- manhattan_matrix("Bronx", late_night_transport)
 
 heatmap_function(bronx_man_late)
 ```
-
-
 
