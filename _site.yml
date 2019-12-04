@@ -11,6 +11,8 @@ navbar:
         href: heatmaps.html
       - text: "Time Distributions"
         href: timedist.html
+      - text: "Congestion"
+        href: congestion.html
     - text: "Dashboard" 
       href: dashboard.html
     - text: "Shiny"

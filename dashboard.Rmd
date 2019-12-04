@@ -1,5 +1,5 @@
 ---
-title: "Dashboard"
+title: "Interactive Maps"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -31,6 +31,9 @@ tmap_mode("view")
 
 Interactive Maps for Manhattan Dropoffs during Dinner on Valentine's Day {data-width=650}
 -----------------------------------------------------------------------
+The maps below are interactive maps that show the boundaries for each taxi zone in Manhattan and where people are being dropped off during dinner hours on Valentine's Day. The zones can be clicked to show the frequency of dropoffs in that particular zone.
+
+The first map shows the "hot spots" during dinner hours on Valentine's Day for all cab passengers, while the second map shows the "hot spots" during dinner hours for cabs with two passengers only (assuming that the majority of cabs with two passengers are couples traveling to their dinner plans).
 
 ### All Dropoffs
 
@@ -60,7 +63,7 @@ vday_zone_map =
     "freq",
     style = "quantile",
     ) +
-  tm_layout(title = "Valentine's Dinner Dropoffs in Manhattan", frame = FALSE)
+  tm_layout(frame = FALSE)
 
 vday_zone_map 
 ```
@@ -86,7 +89,7 @@ two_pass_zone_map =
     "freq",
     style = "quantile",
     ) +
-  tm_layout(title = "Valentine's Dinner Dropoffs (2 Passengers)", frame = FALSE)
+  tm_layout(frame = FALSE)
   
 
 two_pass_zone_map
