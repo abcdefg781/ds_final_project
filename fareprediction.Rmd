@@ -1,0 +1,12 @@
+---
+title: "Fare Prediction"
+author: "James Ng"
+date: "12/4/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Fare Prediction

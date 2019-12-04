@@ -13,6 +13,8 @@ navbar:
         href: timedist.html
       - text: "Congestion"
         href: congestion.html
+      - text: "Fare Prediction"
+        href: fareprediction.html
     - text: "Dashboard" 
       href: dashboard.html
     - text: "Shiny"
