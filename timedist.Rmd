@@ -28,7 +28,7 @@ transport_final = read_csv("./data/transport_final.csv")
 
 We wanted to learn more about the traffic flow into Manhattan on Valentine's Day, so we did a visual analysis based on time distribution of rides going into Manhattan from all boroughs. 
 
-The first four graphs show the frequency of rides into Manhattan from each borough (other than Staten Island) throughout the entire day. The stacked histogram allows us to see how many cab rides came from each type of taxi. We were interested in seeing how these numbers might have changed for Valentine's Day dinner, though, so we created a second set of four graphs just between the hours of 6-9 PM to see when people were leaving for their Valentine's Day plans.
+The first four graphs show the frequency of rides into Manhattan from each borough (other than Staten Island) throughout the entire day. The stacked histogram allows us to see how many rides came from each type of hired car service. We were interested in seeing how these numbers might have changed for Valentine's Day dinner, though, so we created a second set of four graphs just between the hours of 6-9 PM to see when people were leaving for their Valentine's Day dinner plans.
 
 ```{r echo = FALSE, message = FALSE}
 time_dist_function <- function(input_boro) {manhattan_data = 
@@ -160,7 +160,7 @@ manhattan_dinner =
 ggplotly(manhattan_dinner)
 ```
 
-Between 6 to 9 PM, there were a lot of pickups by cab in Manhattan to other destinations in Manhattan. All three hours were pretty busy, with 8 to 9 PM being slightly less busy, but each of these hours still had over 3000 pickups.
+Between 6 to 9 PM, there were a lot of pick-ups by cab in Manhattan to other destinations in Manhattan. All three hours were pretty busy, with 8 to 9 PM being slightly less busy, but each of these hours still had over 3000 pickups.
 
 ## Brooklyn to Manhattan
 ```{r}
