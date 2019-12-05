@@ -20,39 +20,7 @@ The zones represented by the rows are the drop off locations in Manhattan, and t
 To see how many trips occurred between the desired locations, hover over the grid with the mouse. To zoom in on a specific area of any heat map, drag the mouse over the desired area. To highlight a specific pick-up or drop-off location, click on the desired location name.  
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
-vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
-vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
-vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv")
-
-vday_for_hire_vehicle <- vday_for_hire_vehicle %>% 
-  filter(hvfhs_license_num %in% c("HV0003", "HV0005"))
-
-yellow_taxi_vday_samp <- sample_frac(vday_yellow_taxi, size = 0.1) %>% 
-  mutate(type = "yellow")
-green_taxi_vday_samp <- sample_frac(vday_green_taxi, size = 0.2) %>% 
-  mutate(type = "green")
-for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1) %>% 
-  mutate(type = "for hire")
-
-zone = read_csv("./data/taxi_zones.csv")
-
-transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
-
-transport_final = left_join(transport, zone, by = c("pu_location_id" = "zone_id")) %>% 
-  rename(pu_neighborhood = zone,
-         pu_boro = borough) %>% 
-  left_join(., zone, 
-            by = c("do_location_id" = "zone_id")) %>%
-  rename(do_neighborhood = zone,
-         do_boro = borough) %>% 
-  select(-ends_with("location_id")) %>% 
-  filter(do_boro == "Manhattan") %>% 
-  mutate(
-  pu_time = paste(pickup_date, pickup_time, sep = " "),
-  do_time = paste(dropoff_date, dropoff_time, sep = " "),
-  duration = as.numeric(difftime(do_time, pu_time, units = "mins"))
-) %>% 
-  select(-do_time, -pu_time, -do_boro)
+transport_final = read.csv("./data/transport_final.csv")
 
 dinner_time_transport <- transport_final %>% 
   filter(stringr::str_detect(pickup_time, '^18|^19|^20'))
@@ -72,19 +40,19 @@ manhattan_matrix <- function(input_boro, input_df) {
     pu_boro == input_boro
   ) %>% 
   select(
-    pu_neighborhood, do_neighborhood
+    pu_neiborhood, do_neiborhood
   ) %>% 
-  group_by(pu_neighborhood, do_neighborhood) %>% 
+  group_by(pu_neiborhood, do_neiborhood) %>% 
   summarise(count = n()) %>% 
   pivot_wider(
-    names_from = pu_neighborhood,
+    names_from = pu_neiborhood,
     values_from = count
   ) %>% 
   replace(is.na(.),0) %>% 
-  arrange(do_neighborhood) 
+  arrange(do_neiborhood) 
 
 man_man_matrix <- as.matrix(man_man_df[-1])
-row.names(man_man_matrix) <- pull(man_man_df, do_neighborhood)  
+row.names(man_man_matrix) <- pull(man_man_df, do_neiborhood)  
 return(man_man_matrix)
 }
 
