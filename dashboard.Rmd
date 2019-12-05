@@ -1,5 +1,5 @@
 ---
-title: "Interactive Maps"
+title: "Taxi Zone Map"
 output: 
   flexdashboard::flex_dashboard:
     orientation: columns
@@ -27,7 +27,7 @@ tmap_mode("view")
 
 The map below shows the boundaries of each taxi zone in all five boroughs of New York City. You can mouse over each zone to see the corresponding neighborhood and borough.
 
-Column {data-width=650}
+Column
 -----------------------------------------------------------------------
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 zone_map =
