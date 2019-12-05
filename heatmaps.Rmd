@@ -8,6 +8,7 @@ library(readr)
 library(tidyverse)
 library(d3heatmap)
 knitr::opts_chunk$set(echo = TRUE)
+set.seed(1)
 ```
 
 ## Heatmaps
@@ -16,7 +17,7 @@ To further investigate where people go on Valentine's Day via taxi or for hire c
 
 The zones represented by the rows are the drop off locations in Manhattan, and the zones represented by the columns are the pick up locations in the respective borough. Both are arranged alphabetically for ease of finding specific pick-up to drop-off locations. 
 
-To see how many trips occurred between the desired locations, hover over the grid with the mouse. To zoom in on a specific area of any heat map, drag the mouse over the desired area. 
+To see how many trips occurred between the desired locations, hover over the grid with the mouse. To zoom in on a specific area of any heat map, drag the mouse over the desired area. To highlight a specific pick-up or drop-off location, click on the desired location name.  
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
@@ -99,14 +100,17 @@ The first set of heat maps looks at all the rides on Valentine's Day, including 
 
 ## Manhattan to Manhattan
 
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan ranged from 0 to 207 rides. 
+
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 man_man_matrix <- manhattan_matrix("Manhattan", transport_final)
 
 heatmap_function(man_man_matrix)
 ```
 
-
 ## Brooklyn to Manhattan
+
+The number of rides from any single pick-up location in Brooklyn to any single drop-off location in Manhattan ranged from 0 to 17 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 brooklyn_man_matrix <- manhattan_matrix("Brooklyn", transport_final)
@@ -116,6 +120,8 @@ heatmap_function(brooklyn_man_matrix)
 
 ## Queens to Manhattan
 
+The number of rides from any single pick-up location in Queens to any single drop-off location in Manhattan ranged from 0 to 90 rides.
+
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 queens_man_matrix <- manhattan_matrix("Queens", transport_final)
 
@@ -123,6 +129,8 @@ heatmap_function(queens_man_matrix)
 ```
 
 ## Bronx to Manhattan
+
+The number of rides from any single pick-up location in the Bronx to any single drop-off location in Manhattan ranged from 0 to 20 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 bronx_man_matrix <- manhattan_matrix("Bronx", transport_final) 
@@ -132,11 +140,13 @@ heatmap_function(bronx_man_matrix)
 
 # Dinner time on Valentine's Day
 
-Especially since Valentine's Day in 2019 was on a Thursday, most Valentine's Day plans would be scheduled after work. Since many restaurants and businesses have Valentine's Day events or specials, we decided to look at Manhattan drop offs from 6 to 9 PM. 
+Especially since Valentine's Day in 2019 was on a Thursday, most Valentine's Day plans would be scheduled after work. Since many restaurants and businesses have Valentine's Day events or specials, we decided to look at Manhattan drop offs from 6 PM to 9 PM. 
 
 The following heat maps only encompass the dinner time period, allocated between 6 PM to 9 PM. 
 
 ## Manhattan to Manhattan
+
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 6 PM to 9 PM ranged from 0 to 45 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 man_man_dinner <- manhattan_matrix("Manhattan", dinner_time_transport)
@@ -147,6 +157,8 @@ heatmap_function(man_man_dinner)
 
 ## Brooklyn to Manhattan
 
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 6 PM to 9 PM ranged from 0 to 4 rides.
+
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 brooklyn_man_dinner <- manhattan_matrix("Brooklyn", dinner_time_transport)
 
@@ -154,6 +166,8 @@ heatmap_function(brooklyn_man_dinner)
 ```
 
 ## Queens to Manhattan
+
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 6 PM to 9 PM ranged from 0 to 13 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 queens_man_dinner <- manhattan_matrix("Queens", dinner_time_transport)
@@ -163,20 +177,21 @@ heatmap_function(queens_man_dinner)
 
 ## Bronx to Manhattan
 
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 6 PM to 9 PM ranged from 0 to 6 rides.
+
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 bronx_man_dinner <- manhattan_matrix("Bronx", dinner_time_transport) 
 
 heatmap_function(bronx_man_dinner)
 ```
 
-
 # Post Dinner on Valentine's Day  
-
-~ blurb ~
 
 The following heat maps encompass only the later night hours from 9 PM of Valentine's Day to 2 AM of February 15th. 
 
 ## Manhattan to Manhattan
+
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 9 PM on Valentine's Day to 2 AM on February 15th ranged from 0 to 36 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 man_man_late <- manhattan_matrix("Manhattan", late_night_transport)
@@ -187,6 +202,8 @@ heatmap_function(man_man_late)
 
 ## Brooklyn to Manhattan
 
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 9 PM on Valentine's Day to 2 AM on February 15th ranged from 0 to 9 rides.
+
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 brooklyn_man_late <- manhattan_matrix("Brooklyn", late_night_transport)
 
@@ -195,6 +212,8 @@ heatmap_function(brooklyn_man_late)
 
 ## Queens to Manhattan
 
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 9 PM on Valentine's Day to 2 AM on February 15th ranged from 0 to 11 rides.
+
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 queens_man_late <- manhattan_matrix("Queens", late_night_transport)
 
@@ -202,6 +221,8 @@ heatmap_function(queens_man_late)
 ```
 
 ## Bronx to Manhattan
+
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 9 PM on Valentine's Day to 2 AM on February 15th ranged from 0 to 5 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 bronx_man_late <- manhattan_matrix("Bronx", late_night_transport) 
