@@ -14,39 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## General Trends
 
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
-vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
-vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
-vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv")
-
-vday_for_hire_vehicle <- vday_for_hire_vehicle %>% 
-  filter(hvfhs_license_num %in% c("HV0003", "HV0005"))
-
-yellow_taxi_vday_samp <- sample_frac(vday_yellow_taxi, size = 0.1) %>% 
-  mutate(type = "yellow")
-green_taxi_vday_samp <- sample_frac(vday_green_taxi, size = 0.2) %>% 
-  mutate(type = "green")
-for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1) %>% 
-  mutate(type = "for hire")
-
-zone = read_csv("./data/taxi_zones.csv")
-
-transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
-
-transport_final = left_join(transport, zone, by = c("pu_location_id" = "zone_id")) %>% 
-  rename(pu_neighborhood = zone,
-         pu_boro = borough) %>% 
-  left_join(., zone, 
-            by = c("do_location_id" = "zone_id")) %>%
-  rename(do_neighborhood = zone,
-         do_boro = borough) %>% 
-  select(-ends_with("location_id")) %>% 
-  filter(do_boro == "Manhattan") %>% 
-  mutate(
-  pu_time = paste(pickup_date, pickup_time, sep = " "),
-  do_time = paste(dropoff_date, dropoff_time, sep = " "),
-  duration = as.numeric(difftime(do_time, pu_time, units = "mins"))
-) %>% 
-  select(-do_time, -pu_time, -do_boro)
+transport_final = read_csv("./data/transport_final.csv")
 
 congestion_data = transport_final %>% 
   filter(total_amount>0) %>% 
@@ -84,16 +52,22 @@ congestion_data %>%
 ```
 
 <p>
-
-The trends show that congestion in manhattan is pretty consistent whereas it fluctuates more in the other boroughs when traveling into manhattan. Taxi traffic is also non-existant between 2 and 5am.
+<head>  
+  <style>  
+    p { text-indent: 2.0em;}  
+  </style>  
+</head>
+<p>
+Using the data provided by the NYC TLC, we estimated a congestion variable for each taxi ride, with congestion being defines as the amount of time that a passenger will be stuck in a taxi traveling at below 16mph or stopped. We did this for each pick up using $Fare = \beta_0+\beta_1X_{fast}+\beta_2X_{slow+stop}$, which is how much the fare charge is supposed to be according to the [TLC site](https://www1.nyc.gov/site/tlc/passengers/taxi-fare.page). With the data given, we estimated $X_{slow+stop}$ by maximizing $X_{fast}$. While this minimizes the congestion variable to only represent the amount of time a taxi is stopped, it still provides some insight into the trip. 
+Using this estimation, we were able to see some trends regarding congestion. Manhattan to Manhattan travel is pretty consistent with its congestion, whereas it fluctuates more in the other boroughs when traveling into manhattan. Taxi congestion is also practically non-existant between 2 and 5am. This is also reflected in the [time distribution graphs](timedist.html), where we basically see little to no pickups between the hours of 2-5am going into Manhattan or from Manhattan to Manhattan.
 
 </p>
 
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
-congestion_matrix <- function(input_boro) {
-  congestion_map = congestion_data %>% 
-  filter(pu_boro == input_boro) %>%
-  group_by(pu_neighborhood, do_neighborhood) %>%  
+congestion_matrix <- function(input_boro, input_df) {
+  congestion_map = input_df %>% 
+  filter(pu_boro == input_boro) %>% 
+  group_by(pu_neighborhood = pu_neiborhood, do_neighborhood = do_neiborhood) %>%  
   summarize(avg_congestion = mean(congestion),
             avg_wait_pct = mean(wait_pct)) %>% 
     arrange(do_neighborhood) %>% 
@@ -114,15 +88,49 @@ heatmap_function <- function(input_matrix) {
   into_man_heatmap <- d3heatmap(input_matrix, scale = "none", colors = "RdPu",  dendrogram = "none", Rowv = FALSE, Colv = FALSE) 
   return(into_man_heatmap)
 }
+
+morning_rush_transport <- congestion_data %>% 
+  filter(stringr::str_detect(pickup_hr, '^6|^7|^8|^9'))
+
+evening_rush_transport <- congestion_data %>% 
+  filter(stringr::str_detect(pickup_hr, '^16|^17|^18'))
+
+dinner_time_transport <- congestion_data %>% 
+  filter(stringr::str_detect(pickup_hr, '^18|^19|^20'))
+
 ```
 
 ## Manhattan to Manhattan 
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
-man_man_congestion_matrix <- congestion_matrix("Manhattan")
+man_man_congestion_matrix <- congestion_matrix("Manhattan",congestion_data)
 
 heatmap_function(man_man_congestion_matrix)
 ```
  
 <p>
-From this heatmap, you can see that the average congestion in manhattan through the day 
+From this heatmap, you can see that the average congestion in manhattan throughout the day is fairly consistent. 
 </p>
+
+## Manhattan to Manhattan - Morning rush
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+man_man_congestion_matrix <- congestion_matrix("Manhattan",morning_rush_transport)
+
+heatmap_function(man_man_congestion_matrix)
+```
+
+morning rush - 6-9
+evening 4-6
+## Manhattan to Manhattan - Morning rush
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+man_man_congestion_matrix <- congestion_matrix("Manhattan",evening_rush_transport)
+
+heatmap_function(man_man_congestion_matrix)
+```
+
+dinner 6-9
+## Manhattan to Manhattan - Morning rush
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+man_man_congestion_matrix <- congestion_matrix("Manhattan",dinner_time_transport)
+
+heatmap_function(man_man_congestion_matrix)
+```
