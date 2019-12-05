@@ -121,7 +121,7 @@ server <- function(input, output) {
                 y = "Number of drop-offs") + 
             theme_bw() +   
             theme(legend.position = "none",    
-                  plot.title = element_text(hjust = 0.5, size=12, face='bold')))
+                  plot.title = element_text(hjust = 0.5, size=12)))
     })
     
     output$avg_fare_do <- renderPlotly({
@@ -147,7 +147,7 @@ server <- function(input, output) {
                          y = "Average fare amount ($)") + 
                      theme_bw() +   
                      theme(legend.position = "none",    
-                           plot.title = element_text(hjust = 0.5, size=11, face='bold')))
+                           plot.title = element_text(hjust = 0.5, size=12)))
     })
     
     output$avg_dist_do <- renderPlotly({
@@ -173,7 +173,7 @@ server <- function(input, output) {
                          y = "Average distance travelled ($)") + 
                      theme_bw() +   
                      theme(legend.position = "none",    
-                           plot.title = element_text(hjust = 0.5, size=11)))
+                           plot.title = element_text(hjust = 0.7, size=12)))
     })
         
         
@@ -225,7 +225,7 @@ server <- function(input, output) {
                              y = "Number of pick-ups") + 
                          theme_bw() +   
                          theme(legend.position = "none",    
-                               plot.title = element_text(hjust = 0.5, size=12, face='bold')))
+                               plot.title = element_text(hjust = 0.5, size=12)))
         })
 }
 
