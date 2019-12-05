@@ -18,82 +18,22 @@ library(plotly)
 ```
 
 ```{r echo = FALSE, message = FALSE}
-taxi_zones = read.csv("./data/taxi_zones.csv") %>% 
-  select(-shape_length, -shape_area)
-
-zone_map_data = read_sf("./data/nyu_2451_36743.shp")
-
-taxi_data = 
-  read.csv("./data/transport_final.csv")
+zone_map_data = read_sf("./data/nyu_2451_36743.shp") %>% 
+  filter (borough != "EWR") %>% 
+  select(zone, everything())
 
 tmap_mode("view")
 ```
 
-The maps below are interactive maps that show the boundaries for each taxi zone in Manhattan and where people are being dropped off during dinner hours on Valentine's Day. The zones can be clicked to show the frequency of dropoffs in that particular zone.
+The map below shows the boundaries of each taxi zone in all five boroughs of New York City. You can mouse over each zone to see the corresponding neighborhood and borough.
 
-The first map shows the "hot spots" during dinner hours on Valentine's Day for all cab passengers, while the second map shows the "hot spots" during dinner hours for cabs with two passengers only (assuming that the majority of cabs with two passengers are couples traveling to their dinner plans).
-
-Column {data-width=350}
+Column {data-width=650}
 -----------------------------------------------------------------------
-
-### All Dropoffs
-
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
-vday_dinner_data =
-  taxi_data %>% 
-  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
-  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
-  select(-pickup_sec, -pickup_min, -dropoff_sec, -pickup_sec) %>% 
-  mutate(
-    pickup_hr = as.numeric(pickup_hr),
-    dropoff_hr = as.numeric(dropoff_hr)
-  ) %>% 
-  filter(dropoff_hr == 18 | dropoff_hr == 19 | dropoff_hr == 20)
-
-vday_do_neighborhood_count = as.data.frame(table(vday_dinner_data$do_neiborhood)) %>% 
-  select(zone = Var1, freq = Freq)
-
-vday_zone_maps_plot = left_join(zone_map_data, vday_do_neighborhood_count, by = "zone") %>% 
-  na.omit() %>% 
-  filter(borough == "Manhattan") %>% 
-  select(zone, everything())
-
-vday_zone_map =
-  tm_shape(vday_zone_maps_plot) +
-  tm_polygons(
-    "freq",
-    style = "quantile",
-    ) +
+zone_map =
+  tm_shape(zone_map_data) +
+  tm_polygons("borough") +
   tm_layout(frame = FALSE)
 
-vday_zone_map 
-```
-
-Column {data-width=350}
------------------------------------------------------------------------
-### Dropoffs with only 2 Passengers
-
-```{r echo = FALSE, warning = FALSE, message = FALSE}
-two_passenger_dinner_data =
-  vday_dinner_data %>% 
-  filter(passenger_count == 2)
-
-two_pass_dinner_count = as.data.frame(table(two_passenger_dinner_data$do_neiborhood)) %>% 
-  select(zone = Var1, freq = Freq)
-
-two_pass_zone_maps_plot = left_join(zone_map_data, two_pass_dinner_count, by = "zone") %>% 
-  na.omit() %>% 
-  filter(borough == "Manhattan") %>% 
-  select(zone, everything())
-
-two_pass_zone_map =
-  tm_shape(two_pass_zone_maps_plot) +
-  tm_polygons(
-    "freq",
-    style = "quantile",
-    ) +
-  tm_layout(frame = FALSE)
-  
-
-two_pass_zone_map
+zone_map 
 ```
