@@ -130,89 +130,6 @@ length(transport_final$pu_neighborhood[is.na(transport_final$pu_neighborhood)])
 # There are 1613 pickups happening in the Bronx and Staten Island
 ```
 
-# Make a heatmap for tips based on do and pu neighborhoods
-
-``` r
-library("gplots")
-#prepare data
-tp_heatmap_tip = 
-  transport_final %>% 
-  filter(pu_boro == "Manhattan") %>% 
-  select(do_neighborhood, pu_neighborhood, tip_amount) %>% 
-  group_by(do_neighborhood, pu_neighborhood) %>% 
-  summarize(avg_tip = mean(tip_amount)) %>% 
-  ungroup() %>% 
-  distinct() %>% 
-  pivot_wider(
-    names_from = pu_neighborhood,
-    values_from = avg_tip
-  ) %>% 
-  mutate_if(is.numeric , replace_na, replace = 0)
-
-m_tip <- as.matrix(tp_heatmap_tip[, -1])
-rownames(m_tip) <- tp_heatmap_tip$do_neighborhood
-heatmap.2(m_tip, scale="none", density.info="none", trace="none",  hclustfun = hclust)
-```
-
-![](clean_exploratory_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
-
-# Make a heatmap for count of drop-offs for drop-off and pick-up locations in manhattan
-
-``` r
-tp_heatmap_count = 
-  transport_final %>% 
-  filter(pu_boro == "Manhattan") %>% 
-  select(do_neighborhood, pu_neighborhood) %>% 
-  group_by(do_neighborhood, pu_neighborhood) %>% 
-  summarize(count = n()) %>% 
-  ungroup() %>% 
-  filter(count > 20) %>% 
-  pivot_wider(
-    names_from = pu_neighborhood,
-    values_from = count
-  ) %>% 
-  mutate_if(is.numeric , replace_na, replace = 0)
-
-m <- as.matrix(tp_heatmap_count[, -1])
-rownames(m) <- tp_heatmap_count$do_neighborhood
-heatmap.2(m, scale="none", density.info="none", trace="none",  hclustfun = hclust)
-```
-
-![](clean_exploratory_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
-
-# Load necessary packages for network building
-
-``` r
-library(GGally)
-library(network)
-library(geomnet)
-```
-
-# Try to build a network with transport data
-
-``` r
-transport_final_mini =
-  transport_final %>% 
-  sample_frac(0.2) 
-
-tp_list = 
-  list("edges" = transport_final_mini[c("do_neighborhood", "pu_neighborhood")] %>% drop_na(),
-       "vertices" = transport_final_mini[c("do_neighborhood", "pu_boro")] %>% drop_na()) 
-
-tp.net <- network(tp_list$edges[, 1:2], directed = FALSE)
-
-# create node attribute
-tp.net %v% "do_neighborhood" <- as.character(
-tp_list$vertices[ network.vertex.names(tp.net), "do_neighborhood"]
-)
-# create plot for ggnet2
-set.seed(100)
-ggnet2(tp.net, labelon = TRUE, 
-size = 1, vjust = -0.6, mode = "kamadakawai", label.size = 1)
-```
-
-![](clean_exploratory_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
-
 \#bar graph for all pick-ups and drop-offs, colored by borough
 
 ``` r
@@ -226,7 +143,7 @@ transport_final %>%
   coord_flip() 
 ```
 
-![](clean_exploratory_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](clean_exploratory_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 # Dinner time subset of transport\_final
 

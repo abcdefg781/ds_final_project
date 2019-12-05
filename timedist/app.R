@@ -5,6 +5,7 @@ library(viridis)
 library(flexdashboard)
 library(plotly)
 library(leaflet)
+library(htmlwidgets)
 
 #Load in data 
 
@@ -61,8 +62,12 @@ ui <- fluidPage(
                                            column(10, plotlyOutput("avg_dist_do")),
                                            column(10, plotlyOutput("avg_fare_do")))),
                               tabPanel("Map pick-ups", leafletOutput("mapPlot2")),
-                              tabPanel("Map pick-ups", plotlyOutput("summary_pu"))))
-))
+                              tabPanel("Summary pick-ups", 
+                                       fluidRow(
+                                           column(10, plotlyOutput("summary_pu")),
+                                           column(10, plotlyOutput("avg_dist_pu")),
+                                           column(10, plotlyOutput("avg_fare_pu"))))
+))))
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
@@ -137,7 +142,7 @@ server <- function(input, output) {
                          begin = 1, end = 0) + 
                      coord_flip() +
                      labs(
-                         title = "Top 10 drop-off Manhattan neighborhoods from chosen borough \nwith highest average fare amount",
+                         title = "Top 10 Manhattan Neighborhoods with Highest Average Fare Amount",
                          x = "",
                          y = "Average fare amount ($)") + 
                      theme_bw() +   
@@ -163,12 +168,12 @@ server <- function(input, output) {
                          begin = 1, end = 0) + 
                      coord_flip() +
                      labs(
-                         title = "Top 10 drop-off Manhattan neighborhoods from chosen borough \nwith highest average distance travelled to",
+                         title = "Top 10 Manhattan Neighborhoods with Highest Average Travel Distances",
                          x = "",
                          y = "Average distance travelled ($)") + 
                      theme_bw() +   
                      theme(legend.position = "none",    
-                           plot.title = element_text(hjust = 0.5, size=11, face='bold')))
+                           plot.title = element_text(hjust = 0.5, size=11)))
     })
         
         
