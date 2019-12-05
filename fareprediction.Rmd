@@ -240,9 +240,8 @@ Since VIF for all predictors are below 5, we don't need to worry about multicoll
 
 In the end, we decided to go with the model below for fare prediction:
 
-$\hat{Fare} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Duration + \hat{\beta_{2}} \times Distance + \hat{\beta_3} \times I(time of day = early morning) + \hat{\beta_4} \times I(time of day = morning rush)$
-
-$ + \hat{\beta_5} \times I(time of day = lunch) + \hat{\beta_6} \times I(time of day = evening rush) + \hat{\beta_7} \times I(time of day = dinner time) + \hat{\beta_8} \times I(time of day = night)$
+$\hat{Fare} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Duration + \hat{\beta_{2}} \times Distance + \hat{\beta_3} \times I(time of day = early morning) + \hat{\beta_4} \times I(time of day = morning rush) +$
+$\hat{\beta_5} \times I(time of day = lunch) + \hat{\beta_6} \times I(time of day = evening rush) + \hat{\beta_7} \times I(time of day = dinner time) + \hat{\beta_8} \times I(time of day = night)$
 
 ### Fare prediction
 
