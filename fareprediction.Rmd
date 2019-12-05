@@ -1,6 +1,8 @@
 ---
 title: "Fare Prediction"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
 library(tidyverse)
@@ -265,4 +267,4 @@ We used the model obtained above to create a [Shiny app](https://ngduong.shinyap
 
 Please feel free to use the [app](https://ngduong.shinyapps.io/fareest/) here to see how much it might cost you to travel from your current neighborhood to your desired neighborhood! 
 
-(Note that this inference might only be valid for Valentine's Day, R-squared = 88%, and for prices that are less than 60$)
+(Note that this inference might only be valid for Valentine's Day and for prices that are less than $60)
