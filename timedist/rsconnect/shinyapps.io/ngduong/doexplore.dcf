@@ -1,0 +1,12 @@
+name: doexplore
+title: doexplore
+username:
+account: ngduong
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1546484
+bundleId: 2640988
+url: https://ngduong.shinyapps.io/doexplore/
+when: 1575481158.0187
+asMultiple: FALSE
+asStatic: FALSE
