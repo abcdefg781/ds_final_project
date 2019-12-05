@@ -179,7 +179,7 @@ Similarily to Queens, certain zones received no love. No one from the Bronx trav
 
 # Post Dinner on Valentine's Day  
 
-What if you were kept late for work and couldn't make dinner or were already out celebrating Valentine's Day with dinner looking to extend the night? Whether it's to grab a drink or more food, we figured people would continue to enjoy their night past dinner. 
+What if you were kept late for work and could not make dinner or were already out celebrating Valentine's Day with dinner looking to extend the night? Whether it's to grab a drink or more food, we figured people would continue to enjoy their night past dinner. 
 
 The following heat maps encompass only the later night hours from 9 PM of Valentine's Day to 2 AM of February 15th. 
 
@@ -193,7 +193,7 @@ man_man_late <- manhattan_matrix("Manhattan", late_night_transport)
 heatmap_function(man_man_late)
 ```
 
-The later night is when the Upper East Side zones calm down (or tire out.) East Village pick-ups reign supreme, as do East village drop-offs. Clinton East also has more pick-ups relative to other Manhattan pick-up zones. Clinton East and West, and East Chelsea also experience an up-tick in drop-offs. Might as well enjoy a drink, especially on Valentine's Day.
+The later night is when the Upper East Side zones calm down (or tire out.) East Village pick-ups reign supreme, as do East village drop-offs. Clinton East also has more pick-ups relative to other Manhattan pick-up zones. Clinton East and West, and East Chelsea also experienced an up-tick in drop-offs. Might as well enjoy a drink, especially on Valentine's Day.
 
 ## Brooklyn to Manhattan
 
@@ -216,7 +216,7 @@ queens_man_late <- manhattan_matrix("Queens", late_night_transport)
 
 heatmap_function(queens_man_late)
 ```
-Even though LaGuardia and JFK Airports are still the most popular pick-up destinations, only LaGuardia to Murray Hill has more than 10 rides. Hopefully this means that people who meant to spent Valentine's Day with their person made it on time! 
+Even though LaGuardia and JFK Airports are still the most popular pick-up destinations, only LaGuardia to Murray Hill has more than 10 rides. Hopefully this means that people who meant to spend Valentine's Day with their person made it on time! 
 
 In addition, no rides went to Inwood from Queens, and no rides from Briarwood/Jamaica Hills went to Manhattan.
 
