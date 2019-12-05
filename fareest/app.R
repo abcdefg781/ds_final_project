@@ -2,6 +2,7 @@ library(shiny)
 library(readr)
 library(tidyverse)
 library(plotly)
+library(htmlwidgets)
 
 taxi_data = read_csv("./data/transport_final.csv")
 
@@ -31,9 +32,9 @@ fare_data_base =
 fare_data = fare_data_base[-c(123, 16214),]
                               
 
-pu_neiborhood = impute_final %>% distinct(pu_neiborhood) %>% pull()
+pu_neiborhood = impute_data %>% distinct(pu_neiborhood) %>% pull()
 
-do_neiborhood = impute_final %>% distinct(do_neiborhood) %>% pull()
+do_neiborhood = impute_data %>% distinct(do_neiborhood) %>% pull()
 
 time = fare_data %>% 
     distinct(time_of_day) %>% 
@@ -60,13 +61,13 @@ ui <- fluidPage(
                         label = h3("Select drop-off neighborhood"),
                         choices = do_neiborhood, selected = "Clinton East"),
 
-            selectInput("time_of_day", 
+            selectInput("time", 
                         label = h3("Select current time window"),
-                        choices = time, selected = "dinner")),
+                        choices = time, selected = "evening rush")),
 
         # Show a plot of the generated distribution
         mainPanel(
-           dataTableOutput("distPlot")
+           textOutput("predict")
         )
     )
 )
@@ -74,12 +75,19 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
 
-    output$distPlot <- renderDataTable({
-        impute_data %>% 
+        abc = impute_data %>% 
             filter(do_neiborhood = input[["do_choice"]],
                    pu_neiborhood = input[["pu_choice"]]) %>%
-            pull(avg_dist, avg_duration) %>% 
-            tibble()
+            pull(avg_dist) 
+
+        cdf = impute_data %>% 
+            filter(do_neiborhood = input[["do_choice"]],
+                   pu_neiborhood = input[["pu_choice"]]) %>%
+            pull(avg_duration) 
+        
+        output$predict <- renderText({       
+            newData = data.frame(trip_distance = abc, duration = cdf, duration = input[["time"]])
+            predict(moderate_lm, newdata = newData, interval = "predict", level = .95)
     })
 }
 
