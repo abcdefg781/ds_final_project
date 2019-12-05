@@ -14,7 +14,7 @@ navbar:
       - text: "Congestion"
         href: congestion.html
       - text: "Fare Analysis"
-        href: fare_analysis.html
+        href: fareprediction.html
     - text: "Taxi Zone Map" 
       href: dashboard.html
     - text: "Interactive Maps"

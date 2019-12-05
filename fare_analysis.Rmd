@@ -39,7 +39,7 @@ Here, we want to look at what variables are significant predictors for fare, wit
 
 First, we do some exploratory analysis to provide an brief overview about the variable fare, and how it is distributed across boroughs, neighborhoods, type of taxis, and time of day.
 
-```{r}
+```{r echo = FALSE}
 #Total taxi fares by the hour
 ggplotly(transport_final %>% 
   filter(pickup_date == "2019-02-14",
@@ -71,7 +71,7 @@ We can see that the highest total fares can be observed during morning rush hour
 
 You might also be interested in the neighborhoods in Manhattan with the highest average taxi fares (which suggests they are popular (or just far from downtown)!) If so, you can check it out in the Shiny app!
 
-```{r}
+```{r echo = FALSE}
 #make the data that we will use from now on, filtering out "for hire" vehicles and Staten Island pick-up boro (since there's insignficant amount of pick=ups)
 fare_data = 
 transport_final %>% 
@@ -81,7 +81,7 @@ transport_final %>%
 ```
 
 We also break the hours down and recoded them into factors; e.g., 6am-9am is "morning rush", 4pm-6pm is "evening rush", 6pm-9pm is "dinner time", etc.
-```{r}
+```{r echo = FALSE}
 #recode hours
 fare_data =
   fare_data %>% 
@@ -95,7 +95,7 @@ fare_data =
 ```
 
 We might want to look at the distribution of the outcome variable fare amount.
-```{r}
+```{r echo = FALSE}
 fare_data %>% 
   drop_na(fare_amount) %>% 
   ggplot(aes(x = fare_amount)) + 
@@ -104,13 +104,13 @@ fare_data %>%
 
 
 Since the data looks heavily right skewed, we decided to drop fares that are above $60
-```{r}
+```{r echo = FALSE}
 fare_data = 
   fare_data %>% filter(fare_amount <= 60)
 ```
 
 It might be a good idea to look at the correlation plot between fare and other continuous variables.
-```{r}
+```{r echo = FALSE}
 fare_data %>%
   select(fare_amount, trip_distance, duration, extra, tolls_amount) %>% 
 Filter(is.numeric,.) %>%              #filter only numeric variables 
@@ -161,7 +161,7 @@ stepwise_lm %>%
 
 Fitting second and third model, and below are the regression outputs:
 
-```{r eval = FALSE}
+```{r eval = FALSE, echo = FALSE}
 pars_lm = lm(fare_amount ~ trip_distance + duration, data = fare_data)
 
 pars_lm %>% 
@@ -175,7 +175,7 @@ pars_lm %>%
 ```
 
 
-```{r}
+```{r echo = FALSE}
 moderate_lm = lm(fare_amount ~ trip_distance + duration + as.factor(time_of_day), data = fare_data)
 
 moderate_lm %>% 
@@ -190,7 +190,7 @@ moderate_lm %>%
 
 
 Make this comparison in terms of the cross-validated prediction error
-```{r}
+```{r echo = FALSE}
 cv_df =                          #split into train/test 10 times, and stores using list column
   crossv_mc(fare_data, 100) %>% 
   mutate(                        #transform list into tibbles
@@ -226,7 +226,7 @@ cv_df %>%
 This plot above suggests although the moderate model performs only marginal better than the stepwise and parsimonious model, it seems to be the best choice given a balance of both parsimony and better predictive ability. 
 
 Model diagnostics
-```{r}
+```{r echo = FALSE}
 par(mfrow=c(2,2))
 plot(moderate_lm)
 ```
