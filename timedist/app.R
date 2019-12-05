@@ -36,7 +36,7 @@ ui <- fluidPage(
             selectInput(
                 "boro_choice", 
                 label = h3("Select pick-up borough"),
-                choices = boros, selected = "Brooklyn"),
+                choices = boros, selected = "Manhattan"),
             
             selectInput(
                 "day",
@@ -55,7 +55,11 @@ ui <- fluidPage(
         # Show a plot of the generated distribution
         mainPanel(tabsetPanel(type = "tab",
                               tabPanel("Map drop-offs", leafletOutput("mapPlot")),
-                              tabPanel("Summary drop-offs", plotlyOutput("summary_do")),
+                              tabPanel("Summary drop-offs", 
+                                       fluidRow(
+                                           column(10, plotlyOutput("summary_do")),
+                                           column(10, plotlyOutput("avg_fare_do")),
+                                           column(10, plotlyOutput("avg_dist_do")))),
                               tabPanel("Map pick-ups", leafletOutput("mapPlot2")),
                               tabPanel("Map pick-ups", plotlyOutput("summary_pu"))))
 ))
@@ -83,7 +87,7 @@ server <- function(input, output) {
             addTiles() %>% 
             addProviderTiles(providers$CartoDB.Positron) %>% 
             addCircleMarkers(~x.y, ~y.y, 
-                             radius = ~num/20,
+                             radius = ~num/10,
                              popup = ~label,
                              color = ~type)
         })
@@ -114,6 +118,59 @@ server <- function(input, output) {
             theme(legend.position = "none",    
                   plot.title = element_text(hjust = 0.8, size=12, face='bold')))
     })
+    
+    output$avg_fare_do <- renderPlotly({
+        ggplotly(tp_data %>%
+                     filter(pu_boro == input[["boro_choice"]],
+                            pickup_date == input[["day"]],
+                            pickup_hr %in% input$time_range[1]:input$time_range[2],
+                            type == input$car_type) %>% 
+                     group_by(do_neiborhood) %>%
+                     summarize(avg_fare = mean(fare_amount)) %>% 
+                     top_n(n = 15) %>% 
+                     mutate(do_neiborhood = fct_reorder(do_neiborhood, avg_fare)) %>% 
+                     ggplot(aes(x = do_neiborhood, 
+                                y = avg_fare, 
+                                fill = avg_fare)) +
+                     geom_bar(stat = "identity") +
+                     viridis::scale_fill_viridis(
+                         begin = 1, end = 0) + 
+                     coord_flip() +
+                     labs(
+                         title = "Top 10 drop-off Manhattan neighborhoods from chosen borough \nwith highest average fare amount",
+                         x = "",
+                         y = "Average fare amount ($)") + 
+                     theme_bw() +   
+                     theme(legend.position = "none",    
+                           plot.title = element_text(hjust = 0.5, size=11, face='bold')))
+    })
+    
+    output$avg_dist_do <- renderPlotly({
+        ggplotly(tp_data %>%
+                     filter(pu_boro == input[["boro_choice"]],
+                            pickup_date == input[["day"]],
+                            pickup_hr %in% input$time_range[1]:input$time_range[2],
+                            type == input$car_type) %>% 
+                     group_by(do_neiborhood) %>%
+                     summarize(avg_fare = mean(fare_amount)) %>% 
+                     top_n(n = 15) %>% 
+                     mutate(do_neiborhood = fct_reorder(do_neiborhood, avg_fare)) %>% 
+                     ggplot(aes(x = do_neiborhood, 
+                                y = avg_fare, 
+                                fill = avg_fare)) +
+                     geom_bar(stat = "identity") +
+                     viridis::scale_fill_viridis(
+                         begin = 1, end = 0) + 
+                     coord_flip() +
+                     labs(
+                         title = "Top 10 drop-off Manhattan neighborhoods from chosen borough \nwith highest average distance travelled to",
+                         x = "",
+                         y = "Average distance travelled ($)") + 
+                     theme_bw() +   
+                     theme(legend.position = "none",    
+                           plot.title = element_text(hjust = 0.5, size=11, face='bold')))
+    })
+        
         
         output$mapPlot2 <- renderLeaflet({
             tp_data %>%
@@ -135,7 +192,7 @@ server <- function(input, output) {
                 addTiles() %>% 
                 addProviderTiles(providers$CartoDB.Positron) %>% 
                 addCircleMarkers(~x.x, ~y.x, 
-                                 radius = ~numpu/20,
+                                 radius = ~numpu/10,
                                  popup = ~text_label,
                                  color = )
     })

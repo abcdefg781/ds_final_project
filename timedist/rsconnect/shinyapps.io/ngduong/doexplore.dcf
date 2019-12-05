@@ -5,9 +5,9 @@ account: ngduong
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1546484
-bundleId: 2642993
+bundleId: 2643050
 url: https://ngduong.shinyapps.io/doexplore/
-when: 1575531755.03605
+when: 1575534032.79242
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: data/impute_final.csv

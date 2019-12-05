@@ -87,7 +87,23 @@ fare_data =
                   breaks = c(0,2,5,9,11,13,16,18,21,23),
                   labels = c("night","early morning","morning rush","others","lunch","others","evening rush","dinner time","night")),
          congestion = (fare_amount - trip_distance*2.5 -2.5)/.5)%>% 
-  filter(congestion>=0)
+  filter(congestion>=0) %>% 
+  drop_na(fare_amount)
+```
+
+We might want to look at the distribution of the outcome variable fare amount.
+```{r}
+fare_data %>% 
+  drop_na(fare_amount) %>% 
+  ggplot(aes(x = fare_amount)) + 
+  geom_density()
+```
+
+
+Since the data looks heavily right skewed, we decided to drop fares that are above $60
+```{r}
+fare_data = 
+  fare_data %>% filter(fare_amount <= 60)
 ```
 
 It might be a good idea to look at the correlation plot between fare and other continuous variables.
@@ -222,5 +238,4 @@ Since VIF for all predictors are below 5, we don't need to worry about multicoll
 ### Imputation of fare
 
 The fare estimator used a subset of the original dataset with average fare amount computed for each combination of pick-up and drop-off neighborhood. However, there are instances where fare amount is only available for the pick-up and drop-offs neighborhoods  there were a total of 228 trips meeting these criteria. The distances and duration of these trips were then imputed based on the fare amount, rate code, and the median speed of trips with valid distance and duration data.
-
 
