@@ -10,10 +10,11 @@ library(d3heatmap)
 knitr::opts_chunk$set(echo = TRUE)
 set.seed(1)
 ```
+To further investigate where people go on Valentine's Day via taxi or for hire car services, we made several heat maps to breakdown where people from each borough were coming into Manhattan. Due to the lack of drop-offs in Manhattan from Staten Island, we do not include Staten Island rides in any of the heat maps. 
 
-## Heatmaps
+If you are interested in looking at the general heat map trends, click [here](overview.html)!
 
-To further investigate where people go on Valentine's Day via taxi or for hire car services, we made several heat maps to breakdown where people from each borough were coming into Manhattan. Due to the lack of drop-offs in Manhattan from Staten Island, we do not include Staten Island rides in any of the heat maps.  
+## How to Read The Heat Maps 
 
 The zones represented by the rows are the drop off locations in Manhattan, and the zones represented by the columns are the pick up locations in the respective borough. Both are arranged alphabetically for ease of finding specific pick-up to drop-off locations. 
 
@@ -68,7 +69,7 @@ The first set of heat maps looks at all the rides on Valentine's Day, including 
 
 ## Manhattan to Manhattan
 
-The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan ranged from 0 to 207 rides. 
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan ranged from 0 to 218 rides. 
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 man_man_matrix <- manhattan_matrix("Manhattan", transport_final)
@@ -76,9 +77,13 @@ man_man_matrix <- manhattan_matrix("Manhattan", transport_final)
 heatmap_function(man_man_matrix)
 ```
 
+The Upper East Side loves itself, as many of the rides originate and end in either the Upper East Side North or South. Central Harlem and Central Harlem North, along with East Harlem North and East Harlem South also practice this form of self-love. 
+
+Pick-ups and drop-offs in Midtown Center, East, North, and South, Murray Hill, and Penn Station are popular among most of the Manhattan locations. 
+
 ## Brooklyn to Manhattan
 
-The number of rides from any single pick-up location in Brooklyn to any single drop-off location in Manhattan ranged from 0 to 17 rides.
+The number of rides from any single pick-up location in Brooklyn to any single drop-off location in Manhattan ranged from 0 to 19 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 brooklyn_man_matrix <- manhattan_matrix("Brooklyn", transport_final)
@@ -86,9 +91,10 @@ brooklyn_man_matrix <- manhattan_matrix("Brooklyn", transport_final)
 heatmap_function(brooklyn_man_matrix)
 ```
 
+
 ## Queens to Manhattan
 
-The number of rides from any single pick-up location in Queens to any single drop-off location in Manhattan ranged from 0 to 90 rides.
+The number of rides from any single pick-up location in Queens to any single drop-off location in Manhattan ranged from 0 to 80 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 queens_man_matrix <- manhattan_matrix("Queens", transport_final)
@@ -96,15 +102,21 @@ queens_man_matrix <- manhattan_matrix("Queens", transport_final)
 heatmap_function(queens_man_matrix)
 ```
 
+Unsurprisingly, the most active pick-up locations in Queens on Valentine's Day are LaGuardia Airport and JFK Airport. Although this could be a coincidence, we would like to think that people are flying into New York to spend a special Valentine's Day with their special someone. 
+
+For both airports, the most popular drop-off location is Times Square/Theater District, with Midtown Center, East, North, and South, Clinton East, and Murray Hill also as popular drop-off spots. 
+
 ## Bronx to Manhattan
 
-The number of rides from any single pick-up location in the Bronx to any single drop-off location in Manhattan ranged from 0 to 20 rides.
+The number of rides from any single pick-up location in the Bronx to any single drop-off location in Manhattan ranged from 0 to 19 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 bronx_man_matrix <- manhattan_matrix("Bronx", transport_final) 
 
 heatmap_function(bronx_man_matrix)
 ```
+
+People from the Bronx that ventured to Manhattan tended to stay within Northern Manhattan, as Central Harlem North, East Harlem North, Inwood, and Washington Heights North and South received the most drop-off traffic. 
 
 # Dinner time on Valentine's Day
 
@@ -114,7 +126,7 @@ The following heat maps only encompass the dinner time period, allocated between
 
 ## Manhattan to Manhattan
 
-The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 6 PM to 9 PM ranged from 0 to 45 rides.
+The number of rides from any single pick-up location in Manhattan to any single drop-off location in Manhattan from 6 PM to 9 PM ranged from 0 to 41 rides.
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 man_man_dinner <- manhattan_matrix("Manhattan", dinner_time_transport)
@@ -197,4 +209,5 @@ bronx_man_late <- manhattan_matrix("Bronx", late_night_transport)
 
 heatmap_function(bronx_man_late)
 ```
+
 
