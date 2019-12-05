@@ -12,13 +12,19 @@ set.seed(1)
 ```
 To further investigate where people go on Valentine's Day via taxi or for hire car services, we made several heat maps to breakdown where people from each borough were coming into Manhattan. Due to the lack of drop-offs in Manhattan from Staten Island, we do not include Staten Island rides in any of the heat maps. 
 
+Do not know where a certain zone or neighborhood resides in New York? Check out [this map](dashboard.html) to get orientated. 
+
 If you are interested in looking at the general heat map trends, click [here](overview.html)!
+
+Interested in seeing what the potential fare is between specific locations for taxis? This nifty [fare estimator](https://ngduong.shinyapps.io/fareest/) can help with that.
 
 ## How to Read The Heat Maps 
 
 The zones represented by the rows are the drop off locations in Manhattan, and the zones represented by the columns are the pick up locations in the respective borough. Both are arranged alphabetically for ease of finding specific pick-up to drop-off locations. If the zone in the respective borough is not present in the heat map, there were no rides coming from or into that zone. 
 
 To see how many trips occurred between the desired locations, hover over the grid with the mouse. To zoom in on a specific area of any heat map, drag the mouse over the desired area. To highlight a specific pick-up or drop-off location, click on the desired location name.  
+
+Even though the heat maps are great to see which specific locations riders are going from and to, the Summary Drop-offs and Summary Pick-Ups tabs of the [Taxi Distribution Explorer page](https://ngduong.shinyapps.io/doexplore/?fbclid=IwAR05Ib9AFD60fWIZ9bHZNYzezL7hoAzzre_chAOZ60Ig7TlzBTJCmEC3_wQ) is a fantastic way to see the top 10 most popular destinations. 
 
 ```{r ,echo=FALSE, warning=FALSE, message=FALSE}
 transport_final = read.csv("./data/transport_final.csv")
