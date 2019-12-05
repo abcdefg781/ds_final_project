@@ -32,12 +32,12 @@ transport_final = taxi_data %>%
 ```
 
 ### Motivation
-Here, we want to look at what variables are significant predictors for fare, with the final goal of building a taxi fare estimator that can take values on these selected key variables and produce an estimated fare for users, together with a 95% prediction interval. 
+We wanted to look at what variables were significant predictors for fare, with the final goal of building a taxi fare estimator that could take values on these selected key variables and produce an estimated fare for users, together with a 95% prediction interval. 
 
 
 ### Exploratory graphs
 
-First, we do some exploratory analysis to provide an brief overview about the outcome variable fare, and how it is distributed across boroughs, neighborhoods, type of taxis, and time of day.
+First, we did some exploratory analysis to provide a brief overview on the outcome variable fare, and how it was distributed across boroughs, neighborhoods, type of taxis, and time of day.
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
 #Total taxi fares by the hour
@@ -67,7 +67,7 @@ ggplotly(transport_final %>%
           element_blank()) +
     viridis::scale_color_viridis(discrete = TRUE))
 ```
-We can see that the highest total fares can be observed during morning rush hours (6-9am), evening rush hours (4pm-6pm), dinner time (6pm-9pm), and tapering off a little at night (after 9pm) on Valentine's Day. This high amount of aggregate fares show that people either traveled in high volumes to drop-off locations in Manhattan, or took longer trips from other boroughs to Manhattan (longer distance travelled) during these hours. Furthermore, most taxi fares were by yellow taxis, which suggests that these trips took place mostly below East 96th and West 110th Street. 
+We can see that the highest total fares were observed during morning rush hours (6-9am), evening rush hours (4pm-6pm), dinner time (6pm-9pm), and tapering off a little at night (after 9pm) on Valentine's Day. This high amount of aggregate fares show that people either traveled in high volumes to drop-off locations in Manhattan, or took longer trips from other boroughs to Manhattan (longer distance travelled) during these hours. Furthermore, yellow taxis constituted the most rides, which suggested that these trips took place mostly below East 96th and West 110th Street. 
 
 You might also be interested in the neighborhoods in Manhattan with the highest average taxi fares (which suggests they are popular (or maybe they're just far from downtown!) If so, you can check it out in the [Shiny app](https://ngduong.shinyapps.io/fareest/)!
 
@@ -94,7 +94,7 @@ fare_data =
   drop_na(fare_amount)
 ```
 
-We might want to look at the distribution of the outcome variable fare amount.
+The distribution of the outcome variable, fare amount, can be found below.
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 fare_data %>% 
   drop_na(fare_amount) %>% 
@@ -102,8 +102,7 @@ fare_data %>%
   geom_density()
 ```
 
-
-Since the data looks heavily right skewed, we decided to drop fares that are above $60, based on our assumption that most of the fares above 60  are mostly negotiated fares. 
+Since the data looked heavily right skewed, we decided to drop fares that are above $60, based on our assumption that most of the fares above 60 were mostly negotiated fares. 
 ```{r include = FALSE, message = FALSE, warning = FALSE}
 fare_data = 
   fare_data %>% filter(fare_amount <= 60)
@@ -123,7 +122,7 @@ Filter(is.numeric,.) %>%              #filter only numeric variables
 
 ### Model Building 
 
-Looking at the correlation plot, we saw that outcome variable fare is highly correlated with trip distance and tolls amount, well as duration, so we included these as predictors for our second model. Qualitatively, we might also add time of day to this model. 
+Looking at the correlation plot, we saw that outcome variable fare was highly correlated with trip distance and tolls amount, as well as duration, so we included these as predictors for our second model. Qualitatively, we also added time of day to this model. 
 
 ```{r include = FALSE, message = FALSE, warning = FALSE}
 #using stepwise regression (backward)
@@ -139,13 +138,13 @@ We also used stepwise regression with AIC as the criterion to potentially get a 
 fare_lm = lm(fare_amount ~ trip_distance + duration + as.factor(time_of_day) + extra + tolls_amount + as.factor(type) + as.factor(pu_boro), data = fare_data)
 ```
 
-Next, we fitted the expanded model, as the stepwise regression result suggested.Model diagnostics suggest that observation 123 and 16214 are highly influential points (based on crossing Cook's distance cut-off value), so we removed it. 
+Next, we fitted the expanded model, as the stepwise regression result suggested. Model diagnostics suggested that observation 123 and 16214 were highly influential points (based on crossing Cook's distance cut-off value), so we removed those. 
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 fare_data = fare_data[-c(123, 16214),]
 ```
 
-We refitted the model and below is the regression summary output for this first model (stepwise).
+We refitted the model, and below is the stepwise regression summary output for this first model.
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 stepwise_lm = lm(fare_amount ~ trip_distance + duration + as.factor(time_of_day) + extra + tolls_amount + as.factor(type) + as.factor(pu_boro), data = fare_data)
@@ -160,7 +159,7 @@ stepwise_lm %>%
   knitr::kable()
 ```
 
-Fitting the most parsimonious model (with duration and distance as predictors) gives the regression outputs below:
+Fitting the most parsimonious model (with duration and distance as predictors) gave the regression outputs below:
 
 ```{r echo = FALSE, warning =FALSE, message = FALSE}
 pars_lm = lm(fare_amount ~ trip_distance + duration, data = fare_data)
@@ -175,7 +174,7 @@ pars_lm %>%
   knitr::kable()
 ```
 
-And below are the "moderate" model (with duration and distance as predictors) and its regression outputs:
+And below is the "moderate" model (with duration and distance as predictors) and its regression outputs:
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE }
 moderate_lm = lm(fare_amount ~ trip_distance + duration + as.factor(time_of_day), data = fare_data)
@@ -193,7 +192,7 @@ moderate_lm %>%
 
 ### Cross-validation
 
-Now we have 3 models that we wanted to cross-validate and compare cross-validated prediction error RMSE.
+Now, we have 3 models that we wanted to cross-validate and compare cross-validated prediction error RMSE.
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 cv_df =                          #split into train/test 100 times, and stores using list column
@@ -228,7 +227,7 @@ cv_df %>%
           element_text(hjust = 0.5, size=12, face='bold'))
 ```
 
-This plot above suggests although the moderate model performs only marginal better than the stepwise and parsimonious model, it seems to be the best choice given a balance of both parsimony and better predictive ability. This model also has an R-squared of 88%.
+This plot above suggests that although the moderate model performs only marginal better than the stepwise and parsimonious model, it seems to be the best choice given a balance of both parsimony and better predictive ability. This model also has an R-squared of 88%.
 
 #### Check for multicollinearity
 ```{r, echo = FALSE, warning = FALSE, message = FALSE }
