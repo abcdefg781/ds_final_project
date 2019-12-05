@@ -58,8 +58,8 @@ ui <- fluidPage(
                               tabPanel("Summary drop-offs", 
                                        fluidRow(
                                            column(10, plotlyOutput("summary_do")),
-                                           column(10, plotlyOutput("avg_fare_do")),
-                                           column(10, plotlyOutput("avg_dist_do")))),
+                                           column(10, plotlyOutput("avg_dist_do")),
+                                           column(10, plotlyOutput("avg_fare_do")))),
                               tabPanel("Map pick-ups", leafletOutput("mapPlot2")),
                               tabPanel("Map pick-ups", plotlyOutput("summary_pu"))))
 ))
@@ -87,7 +87,7 @@ server <- function(input, output) {
             addTiles() %>% 
             addProviderTiles(providers$CartoDB.Positron) %>% 
             addCircleMarkers(~x.y, ~y.y, 
-                             radius = ~num/10,
+                             radius = ~num/15,
                              popup = ~label,
                              color = ~type)
         })
@@ -116,7 +116,7 @@ server <- function(input, output) {
                 y = "Number of drop-offs") + 
             theme_bw() +   
             theme(legend.position = "none",    
-                  plot.title = element_text(hjust = 0.8, size=12, face='bold')))
+                  plot.title = element_text(hjust = 0.5, size=12, face='bold')))
     })
     
     output$avg_fare_do <- renderPlotly({
@@ -152,12 +152,12 @@ server <- function(input, output) {
                             pickup_hr %in% input$time_range[1]:input$time_range[2],
                             type == input$car_type) %>% 
                      group_by(do_neiborhood) %>%
-                     summarize(avg_fare = mean(fare_amount)) %>% 
+                     summarize(avg_distance = mean(trip_distance)) %>% 
                      top_n(n = 15) %>% 
-                     mutate(do_neiborhood = fct_reorder(do_neiborhood, avg_fare)) %>% 
+                     mutate(do_neiborhood = fct_reorder(do_neiborhood, avg_distance)) %>% 
                      ggplot(aes(x = do_neiborhood, 
-                                y = avg_fare, 
-                                fill = avg_fare)) +
+                                y = avg_distance, 
+                                fill = avg_distance)) +
                      geom_bar(stat = "identity") +
                      viridis::scale_fill_viridis(
                          begin = 1, end = 0) + 
@@ -194,7 +194,7 @@ server <- function(input, output) {
                 addCircleMarkers(~x.x, ~y.x, 
                                  radius = ~numpu/10,
                                  popup = ~text_label,
-                                 color = )
+                                 color = ~type)
     })
         
         output$summary_pu <- renderPlotly({
