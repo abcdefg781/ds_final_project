@@ -1,6 +1,5 @@
 ---
 title: "Heatmaps"
-author: "Data Science Group 31 - Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin"
 output: html_document
 ---
 
