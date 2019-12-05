@@ -20,7 +20,7 @@ navbar:
     - text: "Shiny"
       href: https://ngduong.shinyapps.io/doexplore/?fbclid=IwAR05Ib9AFD60fWIZ9bHZNYzezL7hoAzzre_chAOZ60Ig7TlzBTJCmEC3_wQ
     - icon: fa-github fa-lg
-      href: http://github.com/jamespng3/
+      href: https://github.com/abcdefg781/ds_final_project
 output:
   html_document:
     css: united.css
