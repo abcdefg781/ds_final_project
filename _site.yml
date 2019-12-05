@@ -13,12 +13,12 @@ navbar:
         href: timedist.html
       - text: "Congestion"
         href: congestion.html
-      - text: "Fare Prediction"
-        href: fareprediction.html
     - text: "Taxi Zone Map" 
       href: dashboard.html
     - text: "Interactive Maps"
       href: https://ngduong.shinyapps.io/doexplore/?fbclid=IwAR05Ib9AFD60fWIZ9bHZNYzezL7hoAzzre_chAOZ60Ig7TlzBTJCmEC3_wQ
+    - text: "Fare Predictor"
+      href: https://ngduong.shinyapps.io/fareest/
     - icon: fa-github fa-lg
       href: https://github.com/abcdefg781/ds_final_project
 output:
