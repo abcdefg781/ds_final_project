@@ -53,7 +53,8 @@ Using the data provided by the NYC TLC, we estimated a congestion variable for e
 
 <center> $Fare = \beta_0+\beta_1X_{fast}+\beta_2X_{slow+stop}$ </center>
 <br>
-This equation is a linear representation of what the fare charge should be, according to the [TLC site](https://www1.nyc.gov/site/tlc/passengers/taxi-fare.page). With the data, we estimated $X_{slow+stop}$ by maximizing $X_{fast}$. This minimizes the congestion variable to only represent the amount of time a taxi is stopped.
+This equation is a linear representation of what the fare charge should be, according to the [TLC site](https://www1.nyc.gov/site/tlc/passengers/taxi-fare.page). 
+With the data, we estimated $X_{slow+stop}$ by assuming any distance covered by the taxi was done at speeds at or above 12 mph, maximizing $X_{fast}$. This reduces the congestion variable to only represent the amount of time a taxi is stopped. While this minimizes the congestion variable, it still provides some insight into the trip.
 
 Using this estimation, we were able to see some trends regarding congestion. Manhattan to Manhattan travel is pretty consistent with its congestion, whereas it fluctuates more in the other boroughs when traveling into Manhattan. Taxi congestion is also practically non-existent between 2 and 5am everywhere. This is also reflected in the [time distribution graphs](timedist.html), where we see little to no pickups between the hours of 2-5am going into Manhattan from any borough.
 
