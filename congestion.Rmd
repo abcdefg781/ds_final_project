@@ -1,6 +1,6 @@
 ---
 title: "Congestion"
-author: "James Ng"
+author: "Data Science Group 31 - Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin"
 output: html_document
 ---
 
