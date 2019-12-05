@@ -5,8 +5,8 @@ account: ngduong
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1565039
-bundleId: 2643115
+bundleId: 2643130
 url: https://ngduong.shinyapps.io/fareest/
-when: 1575535833.11699
+when: 1575536560.84426
 asMultiple: FALSE
 asStatic: FALSE
