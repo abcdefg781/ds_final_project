@@ -367,7 +367,7 @@ div.tocify {
       <a href="congestion.html">Congestion</a>
     </li>
     <li>
-      <a href="fare_analysis.html">Fare Analysis</a>
+      <a href="fareprediction.html">Fare Analysis</a>
     </li>
   </ul>
 </li>
@@ -409,11 +409,10 @@ div.tocify {
 </div>
 <div id="data-overview" class="section level2">
 <h2>Data Overview</h2>
-<p>The downloaded data from the TLC contained over a million observations, so we decided to limit the amount of data for our analysis. First, we filtered our data to only contain taxis going into Manhattan. Our logic behind this was that this would reflect the general habits of New Yorkers, as most of the main attractions of New York City reside in the borough of Manhattan.</p>
+<p>The downloaded data from the TLC contained over a million observations for each service dataset, so we decided to limit the amount of data for our analysis. First, we filtered our data to only contain taxis or hired vehicles going into Manhattan. Our logic behind this was that this would reflect the general habits of New Yorkers, as most of the main attractions of New York City reside in the borough of Manhattan.</p>
 <p>We also decided to sample the data to limit the number of observations for each type of taxi service. We used a ten percent sample for both yellow and for-hire taxis, and a twenty percent sample for green taxis since there was less data available. We merged all of these samples into one dataset that would represent data for the entirety of Valentine’s Day.</p>
 <p>Upon an exploratory analysis of this dataset, we found that there were few rides coming from Staten Island into Manhattan. Therefore, we decided to focus on the other four boroughs for analysis, since there was not enough data from Staten Island to come up with meaningful interpretations.</p>
 <p>With this cleaning, we made graphical representations, such as <a href="heatmaps.html">heatmaps</a>, <a href="timedist.html">time distribution graphs</a> and inferences on <a href="congestion.html">congestion</a> to help illustrate where people are going and how far they are willing to travel for a night out on Valentine’s Day.</p>
-</p>
 </div>
 <div id="trends" class="section level2">
 <h2>Trends</h2>
@@ -431,7 +430,7 @@ div.tocify {
 </div>
 <div id="congestion" class="section level3">
 <h3>Congestion</h3>
-<p>Manhattan to Manhattan travel is pretty consistent with its congestion, whereas it fluctuates more in the other boroughs when traveling into Manhattan. Taxi congestion is also practically non-existent between 2 and 5am everywhere. This is also reflected in the time distribution graphs, where we see little to no pickups between the hours of 2-5am going into Manhattan from any borough. Little taxi traffic would suggest less people need to get around at that time, reducing the number of cars in the streets and traffic congestion.</p>
+<p>Manhattan to Manhattan travel is pretty consistent with its congestion, whereas it fluctuates more in the other boroughs when traveling into Manhattan. Taxi congestion is also practically non-existent between 2 to 5 AM everywhere. This is also reflected in the time distribution graphs, where we see little to no pickups between the hours of 2 to 5 AM going into Manhattan from any borough. Little taxi traffic would suggest less people need to get around at that time, reducing the number of cars in the streets and traffic congestion.</p>
 </div>
 </div>
 
