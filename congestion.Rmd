@@ -72,7 +72,7 @@ congestion_matrix <- function(input_boro, input_df) {
     values_from = avg_wait_pct
   ) %>% 
   replace(is.na(.),0) %>% 
-  arrange(do_neighborhood) 
+  arrange(do_neighborhood)
     
 man_man_congestion_matrix <- as.matrix(congestion_map[-1])
 row.names(man_man_congestion_matrix) <- pull(congestion_map, do_neighborhood)  
