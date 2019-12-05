@@ -40,3 +40,7 @@ For Brooklyn and Bronx, proximity to certain neighborhoods played a major factor
 The frequent rides from the Bronx also reflected this, as most of the Manhattan destinations were in Northern Manhattan zones such as Inwood, the Harlem zones, and Washington Heights North and South. 
 
 Housing both LaGuardia and JFK Airports and being most west of Manhattan, Queens did not have many rides going into Manhattan. Majority of the rides going into Manhattan from Queens originated from the airports. Most of the rides from the airports ended up in Times Square/Theater District or the Midtown zones. 
+
+### Congestion
+Manhattan to Manhattan travel is pretty consistent with its congestion, whereas it fluctuates more in the other boroughs when traveling into Manhattan. Taxi congestion is also practically non-existent between 2 and 5am everywhere. This is also reflected in the time distribution graphs, where we see little to no pickups between the hours of 2-5am going into Manhattan from any borough. Little taxi traffic would suggest less people need to get around at that time, reducing the number of cars in the streets and traffic congestion. 
+

@@ -1,6 +1,6 @@
 ---
-title: "P8105 Final Project: Exploring Taxi Habits of NYers on Valentine's Day"
-author: "Group 31: Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin"
+title: "Trends in Car Services in New York City on Valentine's Day"
+author: "Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin"
 output: html_document
 ---
 
