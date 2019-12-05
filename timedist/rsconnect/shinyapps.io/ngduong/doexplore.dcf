@@ -5,8 +5,8 @@ account: ngduong
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 1546484
-bundleId: 2644220
+bundleId: 2644858
 url: https://ngduong.shinyapps.io/doexplore/
-when: 1575564878.15031
+when: 1575578267.71221
 asMultiple: FALSE
 asStatic: FALSE

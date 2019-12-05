@@ -59,7 +59,6 @@ ui <- fluidPage(
                               tabPanel("Summary drop-offs", 
                                        fluidRow(
                                            column(10, plotlyOutput("summary_do")),
-                                           column(10, plotlyOutput("avg_dist_do")),
                                            column(10, plotlyOutput("avg_fare_do")))),
                               tabPanel("Map pick-ups", leafletOutput("mapPlot2")),
                               tabPanel("Summary pick-ups", 
@@ -149,33 +148,7 @@ server <- function(input, output) {
                      theme(legend.position = "none",    
                            plot.title = element_text(hjust = 0.5, size=12)))
     })
-    
-    output$avg_dist_do <- renderPlotly({
-        ggplotly(tp_data %>%
-                     filter(pu_boro == input[["boro_choice"]],
-                            pickup_date == input[["day"]],
-                            pickup_hr %in% input$time_range[1]:input$time_range[2],
-                            type == input$car_type) %>% 
-                     group_by(do_neiborhood) %>%
-                     summarize(avg_distance = mean(trip_distance)) %>% 
-                     top_n(n = 15) %>% 
-                     mutate(do_neiborhood = fct_reorder(do_neiborhood, avg_distance)) %>% 
-                     ggplot(aes(x = do_neiborhood, 
-                                y = avg_distance, 
-                                fill = avg_distance)) +
-                     geom_bar(stat = "identity") +
-                     viridis::scale_fill_viridis(
-                         begin = 1, end = 0) + 
-                     coord_flip() +
-                     labs(
-                         title = "Top 10 Manhattan Neighborhoods with Highest Average Travel Distances",
-                         x = "",
-                         y = "Average distance travelled ($)") + 
-                     theme_bw() +   
-                     theme(legend.position = "none",    
-                           plot.title = element_text(hjust = 0.7, size=12)))
-    })
-        
+       
         
         output$mapPlot2 <- renderLeaflet({
             tp_data %>%
