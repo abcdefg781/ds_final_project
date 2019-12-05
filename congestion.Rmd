@@ -10,7 +10,11 @@ library(d3heatmap)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## General Trends
+### Congestion in NYC
+
+A night out sounds fun, but how annoying will that travel be? Below we show general trends of congestion when traveling into manhattan. 
+
+### General Trends
 
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
 transport_final = read_csv("./data/transport_final.csv")
@@ -49,7 +53,7 @@ congestion_data %>%
     ylab("Average Congestion of Travel")
 ```
 
-Using the data provided by the NYC TLC, we estimated a congestion variable for each taxi ride. Congestion was definted as the amount of time that a passenger spent stuck in the taxi going at a speed of 16 mph or below. We did this for each pick up using the following equation: 
+Using the data provided by the NYC TLC, we estimated a congestion variable for each taxi ride. Congestion was defined as the amount of time that a passenger spent stuck in the taxi going at a speed of 12 mph or below, calculated using the following equation:
 
 <center> $Fare = \beta_0+\beta_1X_{fast}+\beta_2X_{slow+stop}$ </center>
 <br>
@@ -96,14 +100,18 @@ dinner_time_transport <- congestion_data %>%
 
 ```
 
-## Manhattan to Manhattan Congestion
+## How to Read The Heat Maps 
+
+The heatmaps below show Manhattan to Manhattan congestion. The zones represented by the rows are the drop off locations in Manhattan, and the zones represented by the columns are the pick up locations. The rows are arranged alphabetically for ease of finding specific drop-off locations. If the zone in the respective borough is not present in the heat map, there were no rides coming from or into that zone. 
+
+### Manhattan to Manhattan Congestion 
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
 man_man_congestion_matrix <- congestion_matrix("Manhattan",congestion_data)
 
 heatmap_function(man_man_congestion_matrix)
 ```
  
-From this heatmap, you can see that the average congestion in Manhattan throughout the day is fairly consistent. The areas with 0 are most likely areas with no observations. But what about blocks of time during the day? Like morning/evening rush hour or the dinner time that most people follow?
+From this heatmap, you can see that the average congestion in Manhattan throughout the day is fairly consistent. But what about blocks of time during the day? Like morning/evening rush hour or the dinner time that most people follow?
 </p>
 
 #### Manhattan to Manhattan - Morning rush
@@ -113,7 +121,7 @@ man_man_congestion_matrix <- congestion_matrix("Manhattan",morning_rush_transpor
 heatmap_function(man_man_congestion_matrix)
 ```
 
-For morning rush hour (6-9am) we can see that most of the locations that have observations have very high congestion percentages, with areas like West Village and World Trade Center having some of the highest congestion
+For morning rush hour (6-9am) we can see that most of the locations that have observations have very high congestion percentages, with areas like West Village and World Trade Center having some of the highest congestion.
 
 #### Manhattan to Manhattan - Evening rush
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
@@ -131,4 +139,4 @@ man_man_congestion_matrix <- congestion_matrix("Manhattan",dinner_time_transport
 heatmap_function(man_man_congestion_matrix)
 ```
 
-During dinner time (6-9pm), congestion as a whole falls off in this time frame for most of Manhattan except for World Trade Center to World Trade Center travel, which has a travel congestion percentage of 97%. This would suggest that one should avoid this area as travelling by taxi would mostly be in slow moving traffic to travel a relatively small distance.
+During dinner time (6-9pm), congestion as a whole falls off in this time frame for most of Manhattan except for World Trade Center to World Trade Center travel, which has a travel congestion of 97%. This would suggest that one should avoid this area as travelling by taxi would most likely be in slow moving traffic.
