@@ -23,3 +23,7 @@ knitr::opts_chunk$set(echo = TRUE)
 The New York City <b>Taxi and Limousine Commission (NYC TLC)</b> is a New York City government agency that licenses and regulates the medallion taxis and for-hire vehicle industries, including app-based companies such as Lyft and Uber. The [NYC TLC](https://www1.nyc.gov/site/tlc/index.page) requires reporting of various information, such as pickup locations and fares, which is used internally to help the NYC TLC develop policies. This [data](https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page) is made available to the public and [this pdf](https://www1.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_yellow.pdf) can be used to interpret the data. Our team was interesting in using this data to answer some important questions, like where are people going on Valentine's Day? Where are the hot places to take a date? Or to spend an evening drinking or dancing? We explored the data to see where people are going and to see how far they are willing to travel to enjoy a romantic night out.
 </p>
 
+## Screencast
+<center>
+<iframe src="https://www.youtube.com/embed/5P2p2ePtYDk" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</center> <br>
