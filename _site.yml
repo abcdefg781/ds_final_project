@@ -13,6 +13,8 @@ navbar:
         href: timedist.html
       - text: "Congestion"
         href: congestion.html
+      - text: "Fare Analysis"
+        href: fareprediction.html
     - text: "Taxi Zone Map" 
       href: dashboard.html
     - text: "Interactive Maps"

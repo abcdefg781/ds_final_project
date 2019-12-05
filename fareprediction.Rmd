@@ -191,7 +191,7 @@ moderate_lm %>%
 ```
 
 
-#### Cross-validation
+### Cross-validation
 
 Now we have 3 models that we wanted to cross-validate and compare cross-validated prediction error RMSE.
 
@@ -230,18 +230,21 @@ cv_df %>%
 
 This plot above suggests although the moderate model performs only marginal better than the stepwise and parsimonious model, it seems to be the best choice given a balance of both parsimony and better predictive ability. This model also has an R-squared of 88%.
 
-##### Check for multicollinearity
+#### Check for multicollinearity
 ```{r, echo = FALSE, warning = FALSE, message = FALSE }
 car::vif(moderate_lm) %>% 
   knitr::kable()
 ```
+
 Since VIF for all predictors are below 5, we don't need to worry about multicollinearity.
 
 In the end, we decided to go with the model below for fare prediction:
 
-$\hat{Fare} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Duration + \hat{\beta_{2}} \times Distance + \hat{\beta_3} \times I(time of day = early morning) + \hat{\beta_4} \times I(time of day = morning rush) + \hat{\beta_5} \times I(time of day = lunch) + \hat{\beta_6} \times I(time of day = evening rush) + \hat{\beta_7} \times I(time of day = dinner time) + \hat{\beta_8} \times I(time of day = night)$
+$\hat{Fare} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Duration + \hat{\beta_{2}} \times Distance + \hat{\beta_3} \times I(time of day = early morning) + \hat{\beta_4} \times I(time of day = morning rush)$
 
-#### Fare prediction
+$ + \hat{\beta_5} \times I(time of day = lunch) + \hat{\beta_6} \times I(time of day = evening rush) + \hat{\beta_7} \times I(time of day = dinner time) + \hat{\beta_8} \times I(time of day = night)$
+
+### Fare prediction
 
 The data only has fare and duration data for taxi's, so we only looked at Yellow and Green taxi's observations (whose fares are at most $60 and excluding trips in Staten Island). 
 
