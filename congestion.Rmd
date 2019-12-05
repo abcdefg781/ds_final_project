@@ -43,7 +43,6 @@ congestion_data %>%
   ggplot(aes(x=pickup_hr, y = avg_cong))+
     geom_line()+
   facet_grid(~pu_boro)+
-  geom_smooth(method = lm)+
   labs(
     title = "Average Duration of your Trip Stuck in Traffic When Traveling to Manhattan")+
     xlab("Pick Up Hour")+
@@ -134,4 +133,4 @@ man_man_congestion_matrix <- congestion_matrix("Manhattan",dinner_time_transport
 heatmap_function(man_man_congestion_matrix)
 ```
 
-During dinner time (6-9pm) congestion as a whole falls off in this time frame for most of Manhattan except for World Trade Center to World Trade Center travel, which has a travel congestion percentage of 97%. This would suggest that one should avoid this area as travelling by taxi would mostly be in slow moving traffic to travel a relatively small distance.
+During dinner time (6-9pm), congestion as a whole falls off in this time frame for most of Manhattan except for World Trade Center to World Trade Center travel, which has a travel congestion percentage of 97%. This would suggest that one should avoid this area as travelling by taxi would mostly be in slow moving traffic to travel a relatively small distance.
