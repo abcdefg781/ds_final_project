@@ -62,20 +62,21 @@ Using this estimation, we were able to see some trends regarding congestion. Man
 congestion_matrix <- function(input_boro, input_df) {
   congestion_map = input_df %>% 
   filter(pu_boro == input_boro) %>% 
-  group_by(pu_neighborhood = pu_neiborhood, do_neighborhood = do_neiborhood) %>%  
+  arrange(pu_neiborhood) %>% 
+  group_by(pu_neiborhood, do_neiborhood) %>%  
   summarize(avg_congestion = mean(congestion),
             avg_wait_pct = mean(wait_pct)) %>% 
-    arrange(do_neighborhood) %>% 
-  select(pu_neighborhood, do_neighborhood, avg_wait_pct) %>% 
+    arrange(do_neiborhood) %>% 
+  select(pu_neiborhood, do_neiborhood, avg_wait_pct) %>% 
   pivot_wider(
-    names_from = pu_neighborhood,
+    names_from = pu_neiborhood,
     values_from = avg_wait_pct
   ) %>% 
   replace(is.na(.),0) %>% 
-  arrange(do_neighborhood)
+  arrange(do_neiborhood)
     
 man_man_congestion_matrix <- as.matrix(congestion_map[-1])
-row.names(man_man_congestion_matrix) <- pull(congestion_map, do_neighborhood)  
+row.names(man_man_congestion_matrix) <- pull(congestion_map, do_neiborhood)  
 return(man_man_congestion_matrix)  
 }
 
