@@ -1,6 +1,6 @@
 ---
 title: "Fare analysis"
-output: github_document
+output: html_document
 editor_options: 
   chunk_output_type: console
 ---
