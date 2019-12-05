@@ -52,14 +52,13 @@ congestion_data %>%
 ```
 
 <p>
-<head>  
-  <style>  
+<style>  
     p { text-indent: 2.0em;}  
-  </style>  
-</head>
-<p>
-Using the data provided by the NYC TLC, we estimated a congestion variable for each taxi ride, with congestion being defines as the amount of time that a passenger will be stuck in a taxi traveling at below 16mph or stopped. We did this for each pick up using $Fare = \beta_0+\beta_1X_{fast}+\beta_2X_{slow+stop}$, which is how much the fare charge is supposed to be according to the [TLC site](https://www1.nyc.gov/site/tlc/passengers/taxi-fare.page). With the data given, we estimated $X_{slow+stop}$ by maximizing $X_{fast}$. While this minimizes the congestion variable to only represent the amount of time a taxi is stopped, it still provides some insight into the trip. 
-Using this estimation, we were able to see some trends regarding congestion. Manhattan to Manhattan travel is pretty consistent with its congestion, whereas it fluctuates more in the other boroughs when traveling into manhattan. Taxi congestion is also practically non-existant between 2 and 5am. This is also reflected in the [time distribution graphs](timedist.html), where we basically see little to no pickups between the hours of 2-5am going into Manhattan or from Manhattan to Manhattan.
+</style>
+  Using the data provided by the NYC TLC, we estimated a congestion variable for each taxi ride, with congestion being defines as the amount of time that a passenger will be stuck in a taxi traveling at below 16mph or stopped. We did this for each pick up using <center> $Fare = \beta_0+\beta_1X_{fast}+\beta_2X_{slow+stop}$ </center>
+This equation is a linear representation of how the fare charge is supposed to be, according to the [TLC site](https://www1.nyc.gov/site/tlc/passengers/taxi-fare.page). With the data, we estimated $X_{slow+stop}$ by maximizing $X_{fast}$. While this minimizes the congestion variable to only represent the amount of time a taxi is stopped, it still provides some insight into the trip.
+
+Using this estimation, we were able to see some trends regarding congestion. Manhattan to Manhattan travel is pretty consistent with its congestion, whereas it fluctuates more in the other boroughs when traveling into manhattan. Taxi congestion is also practically non-existant between 2 and 5am everywhere. This is also reflected in the [time distribution graphs](timedist.html), where we see little to no pickups between the hours of 2-5am going into Manhattan or from Manhattan to Manhattan.
 
 </p>
 
@@ -100,7 +99,7 @@ dinner_time_transport <- congestion_data %>%
 
 ```
 
-## Manhattan to Manhattan 
+## Manhattan to Manhattan Congestion
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
 man_man_congestion_matrix <- congestion_matrix("Manhattan",congestion_data)
 
@@ -108,29 +107,32 @@ heatmap_function(man_man_congestion_matrix)
 ```
  
 <p>
-From this heatmap, you can see that the average congestion in manhattan throughout the day is fairly consistent. 
+From this heatmap, you can see that the average congestion in Manhattan throughout the day is fairly consistent. The areas with 0 are most likely areas with no observations. But what about blocks of time during the day? Like morning/evening rush hour or the dinner time that most people follow?
 </p>
 
-## Manhattan to Manhattan - Morning rush
+#### Manhattan to Manhattan - Morning rush
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
 man_man_congestion_matrix <- congestion_matrix("Manhattan",morning_rush_transport)
 
 heatmap_function(man_man_congestion_matrix)
 ```
 
-morning rush - 6-9
-evening 4-6
-## Manhattan to Manhattan - Morning rush
+For morning rush hour (6-9am) we can see that most of the locations that have observations have very high congestion percentages, with areas like West Village and World Trade Center having some of the highest congestion
+
+#### Manhattan to Manhattan - Evening rush
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
 man_man_congestion_matrix <- congestion_matrix("Manhattan",evening_rush_transport)
 
 heatmap_function(man_man_congestion_matrix)
 ```
 
-dinner 6-9
-## Manhattan to Manhattan - Morning rush
+For evening rush hour (4-6pm), we actually see a lot more congestion than the morning rush hour. Certain drop off areas, like west village and world trade center, still see extremely high congestion rates though.
+ 
+#### Manhattan to Manhattan - Dinner time
 ```{r ,echo = FALSE, warning = FALSE, message=FALSE}
 man_man_congestion_matrix <- congestion_matrix("Manhattan",dinner_time_transport)
 
 heatmap_function(man_man_congestion_matrix)
 ```
+
+During dinner time (6-9pm) congestion as a whole falls off in this time frame for most of Manhattan except for World Trade Center to World Trade Center travel, which has a travel congestion percentage of 97%. This would suggest that one should avoid this area as travelling by taxi would mostly be in slow moving traffic to travel a relatively small distance.
