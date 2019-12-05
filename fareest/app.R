@@ -1,6 +1,5 @@
 library(shiny)
 library(tidyverse)
-library(lubridate)
 library(plotly)
 
 taxi_data = read_csv("./data/transport_final.csv")

@@ -1,0 +1,39 @@
+---
+title: "Overview"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(readr)
+library(tidyverse)
+library(d3heatmap)
+knitr::opts_chunk$set(echo = TRUE)
+```
+<p>
+</br>
+</p>
+
+## Data Overview
+
+We limited our data to taxis going into Manhattan due to the size of the data available. Our logic is that this also reflects the general habits of New Yorkers, as most of the main attractions of New York City reside in the borough of Manhattan. We have made graphical representations, such as [heatmaps](heatmaps.html), [time distribution graphs](timedist.html) and inferences on [congestion](congestion.html) to help illustrate where people are going and how far they are willing to travel for a night out on Valentine's Day.
+
+Upon an exploratory analysis of the dataset, we found that there were few rides coming from Staten Island into Manhattan. Therefore, we decided to focus on the other four boroughs for analysis, since there was not enough data from Staten Island to come up with meaningful interpretations.
+
+Something about sampling the data here and what we came up with
+</p>
+
+## Trends
+
+### Busiest Hours of the Day
+The time distribution graphs showed that 6-9 PM were some of the most popular hours in all of the boroughs on Valentine’s Day. 8 AM was the busiest hour in Brooklyn and the Bronx, but after that, dinner hours were busiest in those two boroughs. The stacked histograms also showed that yellow cabs accounted for nearly half the rides in Manhattan, but were not nearly as popular in the other boroughs. There were still a decent amount of pickups with yellow cabs in Queens and Brooklyn, but in the Bronx, for-hire vehicles constituted the majority of pickups. 
+
+Looking at the time distribution graphs for just the dinner hours, 7-8 PM seemed to be the most popular time to get picked up for dinner, but the difference between the three hours was minimal for pickups. In general, on Valentine’s Day, people were using cab services to get to work in the morning or to travel around dinner time.
+
+### Busiest Neighborhoods
+Based off the heatmaps, each borough had their neighborhoods and zones of preference. Within Manhattan, many of the rides stayed within the same zone, implying that many people did not travel very far in taxi or in an Uber or Lyft on Valentine's Day. Neighborhoods that tended to stay within their starting zone include the Upper East Side zones, the Harlem zones, and the Midtown zones.
+
+For Brooklyn and Bronx, proximity to certain neighborhoods played a major factor. The more frequent rides from Brooklyn originated from Williamsburg and DUMBO/Vinegar Hill, which is geographically closer to Manhattan than many other Brooklyn neighborhoods. In addition, these pick-ups often were often dropped off in closer Manhattan neighborhoods such as the East Village. 
+
+The frequent rides from the Bronx also reflected this, as most of the Manhattan destinations were in Northern Manhattan zones such as Inwood, the Harlem zones, and Washington Heights North and South. 
+
+Housing both LaGuardia and JFK Airports and being most west of Manhattan, Queens did not have many rides going into Manhattan. Majority of the rides going into Manhattan from Queens originated from the airports. Most of the rides from the airports ended up in Times Square/Theater District or the Midtown zones. 

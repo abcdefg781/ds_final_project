@@ -1,0 +1,133 @@
+---
+title: "Congestion"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(readr)
+library(tidyverse)
+library(d3heatmap)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## General Trends
+
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+transport_final = read_csv("./data/transport_final.csv")
+
+congestion_data = transport_final %>% 
+  filter(total_amount>0) %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>%  
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  ) %>% 
+  mutate(
+    congestion = (fare_amount - (trip_distance*2.5) -2.5)/.5, 
+    wait_pct = congestion/duration
+  ) %>% 
+  filter(ratecode_id==1) %>% 
+  filter(wait_pct<1) %>% 
+  filter(congestion>=0)
+
+```
+
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+congestion_data %>%  
+  group_by(pickup_hr, pu_boro) %>%
+  filter(pu_boro != "NA", pu_boro != "Staten Island") %>% 
+  summarize(avg_cong = mean(wait_pct)) %>% 
+  ggplot(aes(x=pickup_hr, y = avg_cong))+
+    geom_line()+
+  facet_grid(~pu_boro)+
+  labs(
+    title = "Average Duration of your Trip Stuck in Traffic When Traveling to Manhattan")+
+    xlab("Pick Up Hour")+
+    ylab("Average Congestion of Travel")
+```
+
+Using the data provided by the NYC TLC, we estimated a congestion variable for each taxi ride. Congestion was definted as the amount of time that a passenger spent stuck in the taxi going at a speed of 16 mph or below. We did this for each pick up using the following equation: 
+
+<center> $Fare = \beta_0+\beta_1X_{fast}+\beta_2X_{slow+stop}$ </center>
+<br>
+This equation is a linear representation of what the fare charge should be, according to the [TLC site](https://www1.nyc.gov/site/tlc/passengers/taxi-fare.page). 
+With the data, we estimated $X_{slow+stop}$ by assuming any distance covered by the taxi was done at speeds at or above 12 mph, maximizing $X_{fast}$. This reduces the congestion variable to only represent the amount of time a taxi is stopped. While this minimizes the congestion variable, it still provides some insight into the trip.
+
+Using this estimation, we were able to see some trends regarding congestion. Manhattan to Manhattan travel is pretty consistent with its congestion, whereas it fluctuates more in the other boroughs when traveling into Manhattan. Taxi congestion is also practically non-existent between 2 and 5am everywhere. This is also reflected in the [time distribution graphs](timedist.html), where we see little to no pickups between the hours of 2-5am going into Manhattan from any borough.
+
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+congestion_matrix <- function(input_boro, input_df) {
+  congestion_map = input_df %>% 
+  filter(pu_boro == input_boro) %>% 
+  group_by(pu_neighborhood = pu_neiborhood, do_neighborhood = do_neiborhood) %>%  
+  summarize(avg_congestion = mean(congestion),
+            avg_wait_pct = mean(wait_pct)) %>% 
+    arrange(do_neighborhood) %>% 
+  select(pu_neighborhood, do_neighborhood, avg_wait_pct) %>% 
+  pivot_wider(
+    names_from = pu_neighborhood,
+    values_from = avg_wait_pct
+  ) %>% 
+  replace(is.na(.),0) %>% 
+  arrange(do_neighborhood) 
+    
+man_man_congestion_matrix <- as.matrix(congestion_map[-1])
+row.names(man_man_congestion_matrix) <- pull(congestion_map, do_neighborhood)  
+return(man_man_congestion_matrix)  
+}
+
+heatmap_function <- function(input_matrix) {
+  into_man_heatmap <- d3heatmap(input_matrix, scale = "none", colors = "RdPu",  dendrogram = "none", Rowv = FALSE, Colv = FALSE) 
+  return(into_man_heatmap)
+}
+
+morning_rush_transport <- congestion_data %>% 
+  filter(stringr::str_detect(pickup_hr, '^6|^7|^8|^9'))
+
+evening_rush_transport <- congestion_data %>% 
+  filter(stringr::str_detect(pickup_hr, '^16|^17|^18'))
+
+dinner_time_transport <- congestion_data %>% 
+  filter(stringr::str_detect(pickup_hr, '^18|^19|^20'))
+
+```
+
+## Manhattan to Manhattan Congestion
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+man_man_congestion_matrix <- congestion_matrix("Manhattan",congestion_data)
+
+heatmap_function(man_man_congestion_matrix)
+```
+ 
+From this heatmap, you can see that the average congestion in Manhattan throughout the day is fairly consistent. The areas with 0 are most likely areas with no observations. But what about blocks of time during the day? Like morning/evening rush hour or the dinner time that most people follow?
+</p>
+
+#### Manhattan to Manhattan - Morning rush
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+man_man_congestion_matrix <- congestion_matrix("Manhattan",morning_rush_transport)
+
+heatmap_function(man_man_congestion_matrix)
+```
+
+For morning rush hour (6-9am) we can see that most of the locations that have observations have very high congestion percentages, with areas like West Village and World Trade Center having some of the highest congestion
+
+#### Manhattan to Manhattan - Evening rush
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+man_man_congestion_matrix <- congestion_matrix("Manhattan",evening_rush_transport)
+
+heatmap_function(man_man_congestion_matrix)
+```
+
+For evening rush hour (4-6pm), we actually see a lot more congestion than the morning rush hour. Certain drop off areas, like west village and world trade center, still see extremely high congestion rates though.
+ 
+#### Manhattan to Manhattan - Dinner time
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+man_man_congestion_matrix <- congestion_matrix("Manhattan",dinner_time_transport)
+
+heatmap_function(man_man_congestion_matrix)
+```
+
+During dinner time (6-9pm), congestion as a whole falls off in this time frame for most of Manhattan except for World Trade Center to World Trade Center travel, which has a travel congestion percentage of 97%. This would suggest that one should avoid this area as travelling by taxi would mostly be in slow moving traffic to travel a relatively small distance.

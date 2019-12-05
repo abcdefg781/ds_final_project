@@ -1,0 +1,279 @@
+---
+title: "Heat Map"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(tidyverse)
+library(d3heatmap)
+```
+
+```{r}
+vday_green_taxi <- read_csv("./data/vday_green_taxi.csv")
+vday_yellow_taxi <- read_csv("./data/vday_yellow_taxi.csv")
+vday_for_hire_vehicle <- read_csv("./data/vday_for_hire_vehicle.csv")
+
+vday_for_hire_vehicle <- vday_for_hire_vehicle %>% 
+  filter(hvfhs_license_num %in% c("HV0003", "HV0005"))
+
+yellow_taxi_vday_samp <- sample_frac(vday_yellow_taxi, size = 0.1) %>% 
+  mutate(type = "yellow")
+green_taxi_vday_samp <- sample_frac(vday_green_taxi, size = 0.2) %>% 
+  mutate(type = "green")
+for_hire_vday_samp <- sample_frac(vday_for_hire_vehicle, size = 0.1) %>% 
+  mutate(type = "for hire")
+
+zone = read_csv("./data/taxi_zones.csv")
+
+transport = bind_rows(yellow_taxi_vday_samp, green_taxi_vday_samp, for_hire_vday_samp) 
+
+transport_final = left_join(transport, zone, by = c("pu_location_id" = "zone_id")) %>% 
+  rename(pu_neighborhood = zone,
+         pu_boro = borough) %>% 
+  left_join(., zone, 
+            by = c("do_location_id" = "zone_id")) %>%
+  rename(do_neighborhood = zone,
+         do_boro = borough) %>% 
+  select(-ends_with("location_id")) %>% 
+  filter(do_boro == "Manhattan") %>% 
+  mutate(
+  pu_time = paste(pickup_date, pickup_time, sep = " "),
+  do_time = paste(dropoff_date, dropoff_time, sep = " "),
+  duration = as.numeric(difftime(do_time, pu_time, units = "mins"))
+) %>% 
+  select(-do_time, -pu_time, -do_boro)
+
+dinner_time_transport <- transport_final %>% 
+  filter(stringr::str_detect(pickup_time, '^18|^19|^20'))
+
+late_night_transport <- transport_final %>% 
+  filter(
+    stringr::str_detect(pickup_time, '^21|^22|^23')|
+    pickup_date == "2019-02-15"
+    )
+```
+
+# Functions for heatmaps 
+
+## Matrix function
+
+
+```{r}
+manhattan_matrix <- function(input_boro, input_df) {
+  man_man_df <- input_df %>% 
+  filter(
+    pu_boro == input_boro
+  ) %>% 
+  select(
+    pu_neighborhood, do_neighborhood
+  ) %>% 
+  group_by(pu_neighborhood, do_neighborhood) %>% 
+  summarise(count = n()) %>% 
+  pivot_wider(
+    names_from = pu_neighborhood,
+    values_from = count
+  ) %>% 
+  replace(is.na(.),0) %>% 
+  arrange(do_neighborhood) 
+
+man_man_matrix <- as.matrix(man_man_df[-1])
+row.names(man_man_matrix) <- pull(man_man_df, do_neighborhood)  
+return(man_man_matrix)
+}
+```
+
+## Heatmap function
+
+```{r}
+heatmap_function <- function(input_matrix) {
+  into_man_heatmap <- d3heatmap(input_matrix, scale = "none", colors = "RdPu",  dendrogram = "none", Rowv = FALSE, Colv = FALSE) 
+  return(into_man_heatmap)
+}
+```
+
+# All of Valentine's day
+
+## Manhattan to Manhattan
+
+```{r}
+man_man_matrix <- manhattan_matrix("Manhattan", transport_final)
+
+heatmap_function(man_man_matrix)
+```
+
+
+## Brooklyn to Manhattan
+
+```{r}
+brooklyn_man_matrix <- manhattan_matrix("Brooklyn", transport_final)
+
+heatmap_function(brooklyn_man_matrix)
+```
+
+## Queens to Manhattan
+
+```{r}
+queens_man_matrix <- manhattan_matrix("Queens", transport_final)
+
+heatmap_function(queens_man_matrix)
+```
+
+## Bronx to Manhattan
+
+```{r}
+bronx_man_matrix <- manhattan_matrix("Bronx", transport_final) 
+
+heatmap_function(bronx_man_matrix)
+```
+
+## Staten Island to Manhattan
+
+```{r}
+staten_island_matrix <- manhattan_matrix("Staten Island", transport_final)
+
+heatmap_function(staten_island_matrix)
+```
+
+# Dinner time Valentine's Day
+
+## Manhattan to Manhattan
+
+```{r}
+man_man_dinner <- manhattan_matrix("Manhattan", dinner_time_transport)
+
+heatmap_function(man_man_dinner)
+```
+
+
+## Brooklyn to Manhattan
+
+```{r}
+brooklyn_man_dinner <- manhattan_matrix("Brooklyn", dinner_time_transport)
+
+heatmap_function(brooklyn_man_dinner)
+```
+
+## Queens to Manhattan
+
+```{r}
+queens_man_dinner <- manhattan_matrix("Queens", dinner_time_transport)
+
+heatmap_function(queens_man_dinner)
+```
+
+## Bronx to Manhattan
+
+```{r}
+bronx_man_dinner <- manhattan_matrix("Bronx", dinner_time_transport) 
+
+heatmap_function(bronx_man_dinner)
+```
+
+## Staten Island to Manhattan
+
+```{r}
+staten_island_dinner <- manhattan_matrix("Staten Island", dinner_time_transport)
+
+heatmap_function(staten_island_dinner)
+```
+
+# Late Night 
+
+## Manhattan to Manhattan
+
+```{r}
+man_man_late <- manhattan_matrix("Manhattan", late_night_transport)
+
+heatmap_function(man_man_late)
+```
+
+
+## Brooklyn to Manhattan
+
+```{r}
+brooklyn_man_late <- manhattan_matrix("Brooklyn", late_night_transport)
+
+heatmap_function(brooklyn_man_late)
+```
+
+## Queens to Manhattan
+
+```{r}
+queens_man_late <- manhattan_matrix("Queens", late_night_transport)
+
+heatmap_function(queens_man_late)
+```
+
+## Bronx to Manhattan
+
+```{r}
+bronx_man_late <- manhattan_matrix("Bronx", late_night_transport) 
+
+heatmap_function(bronx_man_late)
+```
+
+## Staten Island to Manhattan
+
+```{r}
+staten_island_late <- manhattan_matrix("Staten Island", late_night_transport)
+
+heatmap_function(staten_island_late)
+```
+
+
+# Wait time heat maps
+```{r}
+congestion_data = transport_final %>% 
+  filter(total_amount>0) %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>%  
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  ) %>% 
+  mutate(
+    congestion = (fare_amount - (trip_distance*2.5) -2.5)/.5, 
+    wait_pct = congestion/duration
+  ) %>% 
+  filter(ratecode_id==1) %>% 
+  filter(wait_pct<1) %>% 
+  filter(congestion>=0)
+```
+
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+congestion_matrix <- function(input_boro) {
+  congestion_map = congestion_data %>% 
+  filter(pu_boro == input_boro) %>%
+  group_by(pu_neighborhood, do_neighborhood) %>%  
+  summarize(avg_congestion = mean(congestion),
+            avg_wait_pct = mean(wait_pct)) %>% 
+    arrange(do_neighborhood) %>% 
+  select(pu_neighborhood, do_neighborhood, avg_wait_pct) %>% 
+  pivot_wider(
+    names_from = pu_neighborhood,
+    values_from = avg_wait_pct
+  ) %>% 
+  replace(is.na(.),0) %>% 
+  arrange(do_neighborhood) 
+    
+man_man_congestion_matrix <- as.matrix(congestion_map[-1])
+row.names(man_man_congestion_matrix) <- pull(congestion_map, do_neighborhood)  
+return(man_man_congestion_matrix)  
+}
+
+heatmap_function <- function(input_matrix) {
+  into_man_heatmap <- d3heatmap(input_matrix, scale = "none", colors = "RdPu",  dendrogram = "none", Rowv = FALSE, Colv = FALSE) 
+  return(into_man_heatmap)
+}
+```
+
+## Manhattan to Manhattan 
+```{r ,echo = FALSE, warning = FALSE, message=FALSE}
+man_man_congestion_matrix <- congestion_matrix("Manhattan")
+
+heatmap_function(man_man_congestion_matrix)
+```

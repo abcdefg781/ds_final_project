@@ -1,0 +1,225 @@
+---
+title: "Time Distribution"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+library(plotly)
+```
+
+```{r include = FALSE}
+transport_final = read_csv("./data/transport_final.csv")
+```
+
+## Separating times function
+```{r}
+time_dist_function <- function(input_boro) {manhattan_data = 
+  transport_final %>% 
+  filter(pu_boro == input_boro) %>% 
+  select(pickup_date, pickup_time, dropoff_date, dropoff_time) %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
+  select(-pickup_sec, -dropoff_sec) %>% 
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  )
+return(manhattan_data)
+}
+```
+
+# Manhattan
+## Tidy Data
+```{r}
+manhattan_data <- time_dist_function("Manhattan")
+```
+
+## Plot Data
+```{r echo = FALSE, message = FALSE}
+manhattan_plot =
+  manhattan_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 24, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Pickups in Manhattan on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(manhattan_plot)
+```
+
+## Plot just Dinner Data
+```{r}
+manhattan_dinner =
+  manhattan_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 4, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Manhattan",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(manhattan_dinner)
+```
+
+# Brooklyn
+## Tidy Data
+```{r}
+brooklyn_data <- time_dist_function("Brooklyn")
+```
+
+## Plot Data
+```{r echo = FALSE, message = FALSE}
+brooklyn_plot =
+  brooklyn_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 24, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Pickups in Brooklyn on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(brooklyn_plot)
+```
+
+## Plot just Dinner Data
+```{r}
+brooklyn_dinner =
+  brooklyn_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 4, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Brooklyn",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(brooklyn_dinner)
+```
+
+# Queens
+## Tidy Data
+```{r}
+queens_data <- time_dist_function("Queens")
+```
+
+## Plot Data
+```{r echo = FALSE, message = FALSE}
+queens_plot =
+  queens_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 24, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Pickups in Queens on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(queens_plot)
+```
+
+## Plot just Dinner Data
+```{r}
+queens_dinner =
+  queens_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 4, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Queens",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(queens_dinner)
+```
+
+# Bronx
+## Tidy Data
+```{r}
+bronx_data <- time_dist_function("Bronx")
+```
+
+## Plot Data
+```{r echo = FALSE, message = FALSE}
+bronx_plot =
+  bronx_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 24, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Pickups in the Bronx on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(bronx_plot)
+```
+
+## Plot just Dinner Data
+```{r}
+bronx_dinner =
+  bronx_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 4, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in the Bronx",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(bronx_dinner)
+```
+
+# Staten Island
+## Tidy Data
+```{r}
+staten_data <- time_dist_function("Staten Island")
+```
+
+## Plot Data
+```{r echo = FALSE, message = FALSE}
+staten_plot =
+  staten_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 24, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Pickups in Staten Island on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(staten_plot)
+```
+
+## Plot just Dinner Data
+```{r}
+staten_dinner =
+  staten_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr)) +
+  geom_histogram(bins = 4, color = "red", fill = "pink") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Staten Island",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(staten_dinner)
+```
+

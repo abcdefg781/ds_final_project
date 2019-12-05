@@ -1,0 +1,220 @@
+---
+title: "Time Distributions"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	warning = FALSE
+)
+
+library(tidyverse)
+library(lubridate)
+library(plotly)
+library(viridis)
+library(RColorBrewer)
+
+options(
+  ggplot2.continuous.colour = "gray",
+  ggplot2.continuous.fill = "magma"
+)
+
+scale_color_viridis(option = "magma", alpha = 0.5)
+scale_fill_viridis(option = "magma", alpha = 0.5)
+
+transport_final = read_csv("./data/transport_final.csv")
+```
+
+We wanted to learn more about the traffic flow into Manhattan on Valentine's Day, so we did a visual analysis based on time distribution of rides going into Manhattan from all boroughs. 
+
+The first four graphs show the frequency of rides into Manhattan from each borough (other than Staten Island) throughout the entire day. The stacked histogram allows us to see how many cab rides came from each type of taxi. We were interested in seeing how these numbers might have changed for Valentine's Day dinner, though, so we created a second set of four graphs just between the hours of 6-9 PM to see when people were leaving for their Valentine's Day plans.
+
+```{r echo = FALSE, message = FALSE}
+time_dist_function <- function(input_boro) {manhattan_data = 
+  transport_final %>% 
+  filter(pu_boro == input_boro) %>% 
+  select(pickup_date, pickup_time, dropoff_date, dropoff_time, type) %>% 
+  separate(pickup_time, into = c("pickup_hr", "pickup_min", "pickup_sec"), sep = ":") %>% 
+  separate(dropoff_time, into = c("dropoff_hr", "dropoff_min", "dropoff_sec"), sep = ":") %>% 
+  select(-pickup_sec, -dropoff_sec) %>% 
+  mutate(
+    pickup_hr = as.numeric(pickup_hr),
+    pickup_min = as.numeric(pickup_min),
+    dropoff_hr = as.numeric(dropoff_hr),
+    dropoff_min = as.numeric(dropoff_min)
+  )
+return(manhattan_data)
+}
+```
+
+# Time Distribution Graphs for Valentine's Day
+## Manhattan to Manhattan
+```{r}
+manhattan_data <- time_dist_function("Manhattan")
+```
+
+```{r}
+manhattan_plot =
+  manhattan_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr, fill = type)) +
+  geom_histogram(bins = 24, color = "red") +
+  scale_fill_brewer(palette = "RdPu") +
+  labs(
+    title = "Time Distribution of Pickups in Manhattan on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(manhattan_plot)
+```
+
+Manhattan pickups were generally the busiest throughout the entire day, compared to other boroughs, but the busiest hours were between 6 PM and 9 PM, which were our designated dinner hours. As shown in the stacked histogram, yellow taxis and for-hire vehicles constituted the majority of pickups. On top of that, there were nearly an equal amount of pickups from yellow taxis as there were from for-hire vehicles.
+
+## Brooklyn to Manhattan
+
+```{r}
+brooklyn_data <- time_dist_function("Brooklyn")
+```
+
+``` {r}
+brooklyn_plot =
+  brooklyn_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr, fill = type)) +
+  geom_histogram(bins = 24, color = "red") +
+  scale_fill_brewer(palette = "RdPu") +
+  labs(
+    title = "Time Distribution of Pickups in Brooklyn on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(brooklyn_plot)
+```
+
+In Brooklyn, the busiest hour was 8 AM, which is the morning rush hour to get to work. Dinner hours were not much busier than other hours surrounding dinner time in Brooklyn, which means that more people are not necessarily traveling into Manhattan for their dinner plans (but they could still be going into other boroughs or staying in Brooklyn). The majority of the rides came from for-hire vehicles, with yellow and green taxis taking up only a small amount of the rides.
+
+## Queens to Manhattan
+```{r}
+queens_data <- time_dist_function("Queens")
+```
+
+```{r}
+queens_plot =
+  queens_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr, fill = type)) +
+  geom_histogram(bins = 24, color = "red") +
+  scale_fill_brewer(palette = "RdPu") +
+  labs(
+    title = "Time Distribution of Pickups in Queens on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(queens_plot)
+```
+
+The data for Queens shows a surge in taxi pickups into Manhattan around dinner time, especially at 7 PM. For-Hire vehicles account for more than half the rides in Queens, but there still are a good amount of pickups in yellow taxis, and a small amount in green taxis.
+
+## Bronx to Manhattan
+```{r}
+bronx_data <- time_dist_function("Bronx")
+```
+
+```{r echo = FALSE, message = FALSE}
+bronx_plot =
+  bronx_data %>% 
+  group_by(pickup_date) %>% 
+  ggplot(aes(x = pickup_hr, fill = type)) +
+  geom_histogram(bins = 24, color = "red") +
+  scale_fill_brewer(palette = "RdPu") +
+  labs(
+    title = "Time Distribution of Pickups in the Bronx on Feb 14",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(bronx_plot)
+```
+
+In the Bronx, there was no visible surge around dinner time on Valentine's Day, and the most popular time for taxi pickups was 8 AM for work. As shown, for-hire vehicles are the most popular in the Bronx, and there are some pickups with green taxis and barely any pickups with yellow taxis.
+
+# Time Distribution Graphs for Dinner Hours on Valentine's Day
+## Manhattan to Manhattan
+```{r}
+manhattan_dinner =
+  manhattan_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr, fill = type)) +
+  geom_histogram(bins = 3, color = "red") +
+  scale_fill_brewer(palette = "RdPu") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Manhattan",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(manhattan_dinner)
+```
+
+Between 6 to 9 PM, there were a lot of pickups by cab in Manhattan to other destinations in Manhattan. All three hours were pretty busy, with 8 to 9 PM being slightly less busy, but each of these hours still had over 3000 pickups.
+
+## Brooklyn to Manhattan
+```{r}
+brooklyn_dinner =
+  brooklyn_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr, fill = type)) +
+  geom_histogram(bins = 3, color = "red") +
+  scale_fill_brewer(palette = "RdPu") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Brooklyn",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(brooklyn_dinner)
+```
+
+In Brooklyn, there also was not a huge difference in the number of pickups when looking at each dinner hour separately. 6 to 7 PM seemed to be slightly busier, but not much more than 7 to 9 PM.
+
+## Queens to Manhattan
+```{r}
+queens_dinner =
+  queens_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr, fill = type)) +
+  geom_histogram(bins = 3, color = "red") +
+  scale_fill_brewer(palette = "RdPu") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in Queens",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(queens_dinner)
+```
+
+For dinner pickups in Queens, 7 to 8 PM was the most popular hour for cabs going into Manhattan, and the number of pickups decreased by about 20% during the 8 to 9 PM hour.
+
+## Bronx to Manhattan
+```{r}
+bronx_dinner =
+  bronx_data %>% 
+  filter(pickup_hr == 18 | pickup_hr == 19 | pickup_hr == 20) %>% 
+  ggplot(aes(x = pickup_hr, fill = type)) +
+  geom_histogram(bins = 3, color = "red") +
+  scale_fill_brewer(palette = "RdPu") +
+  labs(
+    title = "Time Distribution of Dinner Pickups in the Bronx",
+    x = "Pickup Hour",
+    y = "Count"
+  )
+
+ggplotly(bronx_dinner)
+```
+
+In the Bronx, pickups for dinner in Manhattan were pretty steady and consistent throughout the three hours designated for dinner. 6 to 7 PM had slightly less pickups than the later hours.

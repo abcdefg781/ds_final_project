@@ -10,18 +10,20 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Data Science Group 31 - Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin" />
+<meta name="author" content="Group 31: Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin" />
 
-<meta name="date" content="2019-11-21" />
 
-<title>P8105 Final Project - Exploring the Taxi habits of NY on Valentine’s day</title>
+<title>P8105 Final Project: Exploring Taxi Habits of NYers on Valentine’s Day</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/cerulean.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -73,6 +75,7 @@ h6 {
 }
 </style>
 
+<link rel="stylesheet" href="united.css" type="text/css" />
 
 
 
@@ -252,6 +255,63 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -259,6 +319,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -279,7 +349,7 @@ $(document).ready(function () {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="about.html">History</a>
+  <a href="overview.html">Project Overview</a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -289,15 +359,27 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="plotly.html">Plotly</a>
+      <a href="heatmaps.html">Heatmaps</a>
     </li>
     <li>
-      <a href="dashboard.html">Dashboard</a>
+      <a href="timedist.html">Time Distributions</a>
+    </li>
+    <li>
+      <a href="congestion.html">Congestion</a>
+    </li>
+    <li>
+      <a href="fareprediction.html">Fare Prediction</a>
     </li>
   </ul>
 </li>
 <li>
-  <a href="http://github.com/jamespng3/">
+  <a href="dashboard.html">Dashboard</a>
+</li>
+<li>
+  <a href="https://ngduong.shinyapps.io/doexplore/?fbclid=IwAR05Ib9AFD60fWIZ9bHZNYzezL7hoAzzre_chAOZ60Ig7TlzBTJCmEC3_wQ">Shiny</a>
+</li>
+<li>
+  <a href="https://github.com/abcdefg781/ds_final_project">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -311,15 +393,12 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">P8105 Final Project - Exploring the Taxi habits of NY on Valentine’s day</h1>
-<h4 class="author">Data Science Group 31 - Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin</h4>
-<h4 class="date">11/21/2019</h4>
+<h1 class="title toc-ignore">P8105 Final Project: Exploring Taxi Habits of NYers on Valentine’s Day</h1>
+<h4 class="author">Group 31: Ngoc Duong, Sabrina Lin, James Ng, Adeline Shin</h4>
 
 </div>
 
 
-<div id="history" class="section level2">
-<h2>History</h2>
 <center>
 <img src="images/taxi.jpg" style="width:50%">
 </center>
@@ -329,15 +408,19 @@ $(document).ready(function () {
   </style>
 </head>
 <p>
-The New York City <b>Taxi and Limousine Commission (NYC TLC)</b> is a New York City government agency that licenses and regulates the medallion taxis and for-hire vehicle industries, including app-based companies such as Lyft and Uber. The <a href="https://www1.nyc.gov/site/tlc/index.page">NYC TLC</a> requires reporting of various information, such as pickup locations and fares, which is used internally to help the NYC TLC develop policies. This <a href="https://www1.nyc.gov/site/tlc/about/data.page">data</a> is made available to the public. Our team was interesting in using this data for one thing, to see where people are going on Valentine’s Day. Where are the hot places to take a date? Or spend an evening drinking or dancing? We explored the data to see where people are going and to see how far they are willing to travel to enjoy their night out.
+<div id="history" class="section level2">
+<h2>History</h2>
+The New York City <b>Taxi and Limousine Commission (NYC TLC)</b> is a New York City government agency that licenses and regulates the medallion taxis and for-hire vehicle industries, including app-based companies such as Lyft and Uber. The <a href="https://www1.nyc.gov/site/tlc/index.page">NYC TLC</a> requires reporting of various information, such as pickup locations and fares, which is used internally to help the NYC TLC develop policies. This <a href="https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page">data</a> is made available to the public and <a href="https://www1.nyc.gov/assets/tlc/downloads/pdf/data_dictionary_trip_records_yellow.pdf">this pdf</a> can be used to interpret the data. Our team was interesting in using this data to answer one very important question, where are people going on Valentine’s Day? Where are the hot places to take a date? Or spend an evening drinking or dancing? We explored the data to see where people are going and to see how far they are willing to travel to enjoy a romantic night out.
 </p>
 <center>
-<img src="images/hearts.jpg" style="width:75%">
+<img src="images/taxi.png" style="width:75%">
 </center>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -370,6 +453,32 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

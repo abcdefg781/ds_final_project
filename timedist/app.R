@@ -5,7 +5,6 @@ library(viridis)
 library(flexdashboard)
 library(plotly)
 library(leaflet)
-library(networkD3)
 
 #Load in data 
 
@@ -36,8 +35,8 @@ ui <- fluidPage(
         sidebarPanel(
             selectInput(
                 "boro_choice", 
-                label = h3("Select borough"),
-                choices = boros, selected = "Manhattan"),
+                label = h3("Select pick-up borough"),
+                choices = boros, selected = "Brooklyn"),
             
             selectInput(
                 "day",
@@ -138,7 +137,7 @@ server <- function(input, output) {
                 addCircleMarkers(~x.x, ~y.x, 
                                  radius = ~numpu/20,
                                  popup = ~text_label,
-                                 color = ~type)
+                                 color = )
     })
         
         output$summary_pu <- renderPlotly({
