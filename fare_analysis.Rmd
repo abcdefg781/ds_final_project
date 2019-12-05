@@ -11,10 +11,13 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 library(modelr)
+library(readr)
 library(mgcv)
 library(purrr)
 library(corrplot)
 library(car)
+library(htmlwidgets)
+
 ```
 
 
@@ -66,7 +69,7 @@ ggplotly(transport_final %>%
 ```
 We can see that the highest total fares can be observed during morning rush hours (6-9am), evening rush hours (4pm-6pm), dinner time (6pm-9pm), and tapering off a little at night (after 9pm) on Valentine's Day. This high amount of aggregate fares show that people either traveled in high volumes to drop-off locations in Manhattan, or took longer trips from other boroughs to Manhattan (longer distance travelled) during these hours. Furthermore, most taxi fares were by yellow taxis, which suggests that these trips took place mostly below East 96th and West 110th Street. 
 
-You might also be interested in the neighborhoods in Manhattan with the highest average taxi fares (which means they are popular!) If so, you can check it out in the Shiny app!
+You might also be interested in the neighborhoods in Manhattan with the highest average taxi fares (which suggests they are popular (or just far from downtown)!) If so, you can check it out in the Shiny app!
 
 ```{r}
 #make the data that we will use from now on, filtering out "for hire" vehicles and Staten Island pick-up boro (since there's insignficant amount of pick=ups)
@@ -239,3 +242,25 @@ Since VIF for all predictors are below 5, we don't need to worry about multicoll
 
 The fare estimator used a subset of the original dataset with average fare amount computed for each combination of pick-up and drop-off neighborhood. However, there are instances where fare amount is only available for the pick-up and drop-offs neighborhoods  there were a total of 228 trips meeting these criteria. The distances and duration of these trips were then imputed based on the fare amount, rate code, and the median speed of trips with valid distance and duration data.
 
+
+```{r}
+data = read_csv("./data/transport_final.csv")
+
+impute_data = read_csv("./data/impute_final.csv")
+
+      abc = impute_data %>% 
+            filter(pu_neiborhood == "Alphabet City",
+                   do_neiborhood == "Alphabet City") %>%
+            pull(avg_dist)
+    cdf =  impute_data %>% 
+            filter(pu_neiborhood == "Alphabet City",
+                   do_neiborhood == "Alphabet City") %>%
+            pull(avg_duration)
+
+            newData = data.frame(trip_distance = abc, duration = cdf, time_of_day = "evening rush")
+            result = predict(moderate_lm, newdata = newData, interval = "predict", level = .95) 
+            
+            result[1]
+
+
+```
